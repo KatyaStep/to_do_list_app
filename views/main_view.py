@@ -33,7 +33,18 @@ class MainWindowView(QMainWindow, QDialog):
 
     def disable_edit_menu(self):
         self.edit_btn.setEnabled(False)
+        self.edit_btn.setStyleSheet("border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
+                                    "rgb(171, 171, 171);")
         self.complete_main_checkbox.setEnabled(False)
+        self.complete_main_checkbox.setStyleSheet("color: rgb(171, 171, 171)")
+
+    def enable_edit_menu(self):
+        self.edit_btn.setEnabled(True)
+        self.edit_btn.setStyleSheet("color: black; border-radius: 6px; border : 2px solid grey; background-color: "
+                                    "#dbe8f6;")
+
+        self.complete_main_checkbox.setEnabled(True)
+        self.complete_main_checkbox.setStyleSheet("color: black;")
 
     def add_task(self, task_name):
         item = QListWidgetItem(task_name)
@@ -59,12 +70,16 @@ class MainWindowView(QMainWindow, QDialog):
         print(f'{item.text()} was clicked!!!!')
         if item.checkState():
             item.setCheckState(QtCore.Qt.Unchecked)
+            self.disable_edit_menu()
         else:
             item.setCheckState(QtCore.Qt.Checked)
+            self.enable_edit_menu()
 
         # edit_window = EditWindow(self.controller)
         # edit_window.show_window()
 
     def click_edit_btn(self):
         print('edit btn was clicked!!!!')
+        edit_window = EditWindow(self.controller)
+        edit_window.show_window()
 
