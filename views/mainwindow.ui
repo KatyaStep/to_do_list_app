@@ -28,7 +28,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>To Do App</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #d7e7f5;</string>
@@ -50,7 +50,7 @@
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 57 italic 16pt &quot;Futura&quot;;
+     <string notr="true">font: 14pt &quot;Chalkduster&quot;;
 color: black;</string>
     </property>
     <property name="frameShape">
@@ -137,9 +137,10 @@ color: black;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: black;
+      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
+color: black;
 background-color: white;
-border: 1px dashed black;
+border: 1px solid grey;
 border-width: 1px;
 border-radius: 10px;</string>
      </property>
@@ -174,7 +175,7 @@ border-radius: 10px;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>15</pointsize>
+       <pointsize>12</pointsize>
        <italic>false</italic>
        <bold>false</bold>
        <kerning>true</kerning>
@@ -183,11 +184,20 @@ border-radius: 10px;</string>
      <property name="styleSheet">
       <string notr="true">color: black;
 font-weight: normal;
-font:  15pt &quot;Helvetica&quot;;
+font: 12pt &quot;Chalkduster&quot;;
 </string>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="currentRow">
+      <number>-1</number>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton">
@@ -200,13 +210,12 @@ font:  15pt &quot;Helvetica&quot;;
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: black;
+      <string notr="true">font: 13pt &quot;Chalkduster&quot;;
+color: black;
 background-color: white;
-border-color: black;
-border-style: dashed;
+border: 1px solid grey;
 border-width: 1px;
-border-radius: 10px;
-padding: 2px;</string>
+border-radius: 10px;</string>
      </property>
      <property name="text">
       <string>Incomplete</string>
@@ -234,13 +243,12 @@ padding: 2px;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: black;
+      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
+color: black;
 background-color: white;
-border-color: black;
-border-style: dashed;
+border: 1px solid grey;
 border-width: 1px;
-border-radius: 10px;
-padding: 2px;</string>
+border-radius: 10px;</string>
      </property>
      <property name="text">
       <string>Completed</string>
@@ -268,7 +276,8 @@ padding: 2px;</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-radius: 6px;
+      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
+border-radius: 6px;
 border : 2px solid grey;
 background-color: #dbe8f6;
 color: rgb(171, 171, 171);</string>
@@ -282,12 +291,13 @@ color: rgb(171, 171, 171);</string>
       <rect>
        <x>20</x>
        <y>70</y>
-       <width>85</width>
-       <height>22</height>
+       <width>91</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(171, 171, 171);</string>
+      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
+color: rgb(171, 171, 171);</string>
      </property>
      <property name="text">
       <string>Complete</string>
@@ -331,13 +341,13 @@ color: rgb(171, 171, 171);</string>
      <rect>
       <x>800</x>
       <y>80</y>
-      <width>121</width>
+      <width>131</width>
       <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">color: black;
-font: 22pt &quot;Helvetica&quot;;</string>
+font: 20pt &quot;Chalkduster&quot;;</string>
     </property>
     <property name="text">
      <string>All Tasks </string>
@@ -351,7 +361,7 @@ font: 22pt &quot;Helvetica&quot;;</string>
      <rect>
       <x>810</x>
       <y>120</y>
-      <width>61</width>
+      <width>71</width>
       <height>51</height>
      </rect>
     </property>
@@ -368,7 +378,8 @@ font: 22pt &quot;Helvetica&quot;;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: black;</string>
+      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
+color: black;</string>
      </property>
      <property name="text">
       <string>tasks</string>
@@ -382,13 +393,13 @@ font: 22pt &quot;Helvetica&quot;;</string>
       <rect>
        <x>20</x>
        <y>0</y>
-       <width>21</width>
+       <width>31</width>
        <height>21</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: #0060bf;
-font-size: 19px;</string>
+      <string notr="true">font: 19px &quot;Chalkduster&quot;;
+color: #0060bf;</string>
      </property>
      <property name="text">
       <string/>
@@ -404,9 +415,9 @@ font-size: 19px;</string>
    <widget class="QWidget" name="alltasks_overdue" native="true">
     <property name="geometry">
      <rect>
-      <x>890</x>
+      <x>900</x>
       <y>120</y>
-      <width>61</width>
+      <width>71</width>
       <height>51</height>
      </rect>
     </property>
@@ -423,7 +434,8 @@ font-size: 19px;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: black;</string>
+      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
+color: black;</string>
      </property>
      <property name="text">
       <string>overdue</string>
@@ -437,13 +449,13 @@ font-size: 19px;</string>
       <rect>
        <x>20</x>
        <y>0</y>
-       <width>21</width>
+       <width>31</width>
        <height>21</height>
       </rect>
      </property>
      <property name="styleSheet">
       <string notr="true">color: red;
-font-size: 19px;
+font: 19px &quot;Chalkduster&quot;;
 </string>
      </property>
      <property name="text">
@@ -460,14 +472,15 @@ font-size: 19px;
    <widget class="QWidget" name="alltasks_completed" native="true">
     <property name="geometry">
      <rect>
-      <x>980</x>
+      <x>990</x>
       <y>120</y>
-      <width>71</width>
+      <width>81</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: #dbe8f6;</string>
+     <string notr="true">background-color: #dbe8f6;
+font: 19px &quot;Chalkduster&quot;;</string>
     </property>
     <widget class="QLabel" name="completed_label">
      <property name="geometry">
@@ -479,7 +492,8 @@ font-size: 19px;
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(171, 171, 171);</string>
+      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
+color: rgb(171, 171, 171);</string>
      </property>
      <property name="text">
       <string>completed</string>
@@ -493,7 +507,7 @@ font-size: 19px;
       <rect>
        <x>20</x>
        <y>0</y>
-       <width>21</width>
+       <width>41</width>
        <height>21</height>
       </rect>
      </property>

@@ -8,6 +8,9 @@ class MainWindowController(QObject):
         self.model = model
         self.tasks = self.model.get_all_tasks()
 
+        self.edit_view = None
+        self.edit_task_name = None
+
     def set_view(self, view):
         self.view = view
 
@@ -38,16 +41,28 @@ class MainWindowController(QObject):
 
     def add_task_to_the_list(self, task_name):
         self.model.create_task(task_name)
-        self.model.get_last_added_task()
-        self.view.get_task_text(task_name)
+        task = self.model.get_last_added_task()
+        self.view.add_task(task.name)
         self.tasks = self.model.get_all_tasks()
         self.update_task_overview()
 
     def set_edit_window(self, edit_view):
         self.edit_view = edit_view
 
-    def show_edit_window(self):
+    def show_edit_window(self, edit_window, task_id):
+        # self.edit_task_name = task_name
+        self.edit_task_id = task_id
+        self.set_edit_window(edit_window)
+
+        # task = self.model.get_task_info(self.edit_task_name)
+        task = self.model.get_task_info(self.edit_task_id)
+        # self.edit_view.task_info(task.id, task.name, task.due_date, task.completed, task.notes)
+        self.edit_view.task_info(task)
         self.edit_view.exec()
+
+    # def save_changes(self, task_name, due_date, completed, notes):
+    #     self.model.update_task_info(task_name, due_date, completed, notes, self.edit_task_name)
+
 
 
 

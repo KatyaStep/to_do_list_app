@@ -1,5 +1,7 @@
 import sys
+
 from PyQt5.QtWidgets import QApplication
+
 from controllers.main_controller import MainWindowController
 from views.main_view import MainWindowView
 from model.main_model import Model
