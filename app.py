@@ -1,3 +1,5 @@
+"""This module initializes the app"""
+
 import sys
 
 from PyQt5.QtWidgets import QApplication
@@ -8,8 +10,20 @@ from model.main_model import Model
 
 
 class App(QApplication):
+    """
+    A class used to represent applicationa
+
+    Attributes
+    ----------
+    sys_argv: command lines argument
+
+    Methods
+    -------
+    close_event(self)
+    """
+
     def __init__(self, sys_argv):
-        super(App, self).__init__(sys_argv)
+        super().__init__(sys_argv)
         self.app = QApplication(sys_argv)
         self.model = Model()
         self.controller = MainWindowController(self.model)
@@ -19,9 +33,11 @@ class App(QApplication):
 
         self.main_view.show()
 
-        self.app.aboutToQuit.connect(self.closeEvent)
+        self.app.aboutToQuit.connect(self.close_event)
 
-    def closeEvent(self):
+    def close_event(self):
+        """Call the function clean from model.py"""
+
         print("hello exit")
         self.model.clean()
 

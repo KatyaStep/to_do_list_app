@@ -303,6 +303,29 @@ color: rgb(171, 171, 171);</string>
       <string>Complete</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="edit_btn_2">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>70</y>
+       <width>80</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
+border-radius: 6px;
+border : 2px solid grey;
+background-color: #dbe8f6;
+color: rgb(171, 171, 171);</string>
+     </property>
+     <property name="text">
+      <string>Delete</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
