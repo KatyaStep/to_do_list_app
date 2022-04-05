@@ -159,8 +159,7 @@ class Model:
         """
 
         query = "DELETE from tasks WHERE rowid=?"
-        results = self.cursor.execute(query, (task_id,))
+        self.cursor.execute(query, (task_id,))
         self.app_db.commit()
 
         return True
-
