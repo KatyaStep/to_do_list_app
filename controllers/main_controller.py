@@ -4,7 +4,6 @@ from datetime import date
 from PyQt5.QtCore import QObject
 
 
-
 class MainWindowController(QObject):
     """
     A class used to represent Controlle module.
@@ -42,7 +41,7 @@ class MainWindowController(QObject):
         self.view = None
         self.edit_view = None
         self.edit_task_name = None
-        self.confirmation_view = None
+        # self.confirmation_view = None
 
     def set_view(self, view):
         """Initialize main_window(view module)
@@ -66,16 +65,14 @@ class MainWindowController(QObject):
 
         self.edit_view = edit_view
 
-    def set_confirmation_dialog(self, confirm_dialog):
-        """Initialize confirm dialog window(view module)
-
-        Parameters
-        ----------
-        confirm_dialog: object
-            instance of class ConfirmationDialog(QDialog)
-        """
-
-        self.confirmation_view = confirm_dialog
+    # def set_confirmation_dialog(self, confirm_dialog):
+    #     """Initialize confirm dialog window(view module)
+    #     Parameters
+    #     ----------
+    #     confirm_dialog: object
+    #         instance of class ConfirmationDialog(QDialog)
+    #     """
+    #     self.confirmation_view = confirm_dialog
 
     def on_start_up(self):
         """Calls methods 'update_task_list(), update_task_overview() on the start of the app."""
@@ -158,4 +155,16 @@ class MainWindowController(QObject):
         """
 
         self.model.update_task_info(self.edit_task_id, task_name, due_date, notes)
-        self.confirmation_view.exec()
+        self.view.update_task_name(task_name, self.edit_task_id)
+
+    def delete_task(self, task_id):
+        """Call model instance to delete a task from db
+
+        Parameters
+        ----------
+        task_id: int
+            task_id that equals rowid in db
+        """
+
+        if self.model.delete_task(task_id):
+            print("Deleted successfully")

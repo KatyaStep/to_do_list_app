@@ -3,38 +3,39 @@
 from datetime import date, timedelta
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QDialog
+from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QDialog, QMessageBox
 from PyQt5.uic import loadUi
 from qtconsole.qtconsoleapp import QtCore
 
 
-class ConfirmationDialog(QDialog):
-    """
-    A class used to represent Confirmation dialog-window.
-
-    Attributes
-    ----------
-    controller: object
-        instance of class MainWindowController(QObject)
-
-    Methods
-    -------
-    close_window(self)
-
-    """
-    def __init__(self, controller):
-        super().__init__()
-        self.controller = controller
-        self.controller.set_confirmation_dialog(self)
-        self.confirm_dialog = "views/confirmation_save_dialog.ui"
-        loadUi(self.confirm_dialog, self)
-
-        self.message_lineEdit.setAttribute(Qt.WA_MacShowFocusRect, False)
-        self.ok_btn.clicked.connect(self.close_window)
-
-    def close_window(self):
-        """Closes the Confirmation-dialog window"""
-        self.close()
+# class ConfirmDialogSave(QDialog):
+#     """
+#     A class used to represent Confirmation dialog-window.
+#
+#     Attributes
+#     ----------
+#     controller: object
+#         instance of class MainWindowController(QObject)
+#
+#     Methods
+#     -------
+#     close_window(self)
+#
+#     """
+#
+#     def __init__(self, controller):
+#         super().__init__()
+#         self.controller = controller
+#         self.controller.set_confirmation_dialog(self)
+#         self.confirm_dialog = "views/confirmation_save_dialog.ui"
+#         loadUi(self.confirm_dialog, self)
+#
+#         self.message_lineEdit.setAttribute(Qt.WA_MacShowFocusRect, False)
+#         self.ok_btn.clicked.connect(self.close_window)
+#
+#     def close_window(self):
+#         """Closes the Confirmation-dialog window"""
+#         self.close()
 
 
 class EditWindow(QDialog):
@@ -59,13 +60,13 @@ class EditWindow(QDialog):
         self.controller = controller
         self.controller.set_edit_window(self)
         self.edit_ui = "views/edit_window.ui"
+        self.confirm_dialog = None
         # self.confirm_dialog = "views/confirmation_save_dialog.ui"
         # loadUi(self.confirm_dialog, self)
         loadUi(self.edit_ui, self)
 
         self.edit_task_name_lineEdit.setAttribute(Qt.WA_MacShowFocusRect, False)
         self.notes_lineEdit.setAttribute(Qt.WA_MacShowFocusRect, False)
-        # self.save_changes_btn.clicked.connect(self.get_changes)
         self.due_date_box.activated.connect(self.due_date_select)
         self.calendarWidget.selectionChanged.connect(self.pick_calendar_date)
         self.save_changes_btn.clicked.connect(self.save_changes)
@@ -116,6 +117,8 @@ class EditWindow(QDialog):
         self.due_date_box.setItemText(0, str(date_selected))
         self.due_date_box.setCurrentIndex(0)
 
+        # print(self.due_date_box.currentText())
+
     def task_info(self, task):
         """
         Show a task info: name, due_date, notes, tags in Edit mode
@@ -148,12 +151,31 @@ class EditWindow(QDialog):
         print("Save btn was clicked")
         task_name = self.edit_task_name_lineEdit.text()
         due_date = self.due_date_box.currentText()
+        print("SAVE CHANGES:", due_date)
         notes = self.notes_lineEdit.text()
 
-        confirm_dialog = ConfirmationDialog(self.controller)
-        self.controller.set_confirmation_dialog(confirm_dialog)
+        # confirm_dialog = ConfirmDialogSave(self.controller)
+        # self.controller.set_confirmation_dialog(confirm_dialog)
         self.controller.save_changes(task_name, due_date, notes)
+        self.show_confirm_dialog()
         self.close()
+
+    @staticmethod
+    def show_confirm_dialog():
+        """Create a confirmation message window to notify a user about successfully saved changes"""
+
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+
+        msg.setText("Congratulations")
+        msg.setInformativeText("Your changes have been successfully saved!")
+        msg.setWindowTitle("Message")
+        # msg.setDetailedText("The details are as follows:")
+        msg.setStandardButtons(QMessageBox.Ok)
+        # msg.buttonClicked.connect(msgbtn)
+
+        retval = msg.exec_()
+        print("value of pressed message box button:", retval)
 
 
 class MainWindowView(QMainWindow):
@@ -178,6 +200,7 @@ class MainWindowView(QMainWindow):
     click_edit_btn(self)
 
     """
+
     def __init__(self, controller):
         """
         Parameters
@@ -198,14 +221,20 @@ class MainWindowView(QMainWindow):
 
         self.task_list.itemClicked.connect(self.item_click)
         self.edit_btn.clicked.connect(self.click_edit_btn)
+        self.delete_btn.clicked.connect(self.click_delete_btn)
         self.add_task_qline.returnPressed.connect(self.get_task_text)
 
     def disable_edit_menu(self):
         """Disables the edit menu"""
 
         self.edit_btn.setEnabled(False)
+        self.delete_btn.setEnabled(False)
+
         self.edit_btn.setStyleSheet("border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
                                     "rgb(171, 171, 171); font: 12pt 'Chalkduster';")
+        self.delete_btn.setStyleSheet("border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
+                                      "rgb(171, 171, 171); font: 12pt 'Chalkduster';")
+
         self.complete_main_checkbox.setEnabled(False)
         self.complete_main_checkbox.setStyleSheet("color: rgb(171, 171, 171); font: 12pt 'Chalkduster';")
 
@@ -213,8 +242,12 @@ class MainWindowView(QMainWindow):
         """Enables the edit menu"""
 
         self.edit_btn.setEnabled(True)
+        self.delete_btn.setEnabled(True)
+
         self.edit_btn.setStyleSheet("color: black; border-radius: 6px; border : 2px solid grey; background-color: "
                                     "#dbe8f6; font: 12pt 'Chalkduster';")
+        self.delete_btn.setStyleSheet("color: black; border-radius: 6px; border : 2px solid grey; background-color: "
+                                      "#dbe8f6; font: 12pt 'Chalkduster';")
 
         self.complete_main_checkbox.setEnabled(True)
         self.complete_main_checkbox.setStyleSheet("color: black; font: 12pt 'Chalkduster';")
@@ -288,6 +321,7 @@ class MainWindowView(QMainWindow):
         if item.checkState():
             item.setCheckState(QtCore.Qt.Unchecked)
             self.disable_edit_menu()
+
         else:
             item.setCheckState(QtCore.Qt.Checked)
             self.enable_edit_menu()
@@ -305,3 +339,55 @@ class MainWindowView(QMainWindow):
         task_id = self.task_list.currentRow() + 1  # because in db row_id starts with 1
         print(task_id)
         self.controller.show_edit_window(edit_window, task_id)
+
+    def click_delete_btn(self):
+        """Calls controller function to delete the selected task"""
+        task_id = self.task_list.currentRow() + 1  # # because in db row_id starts with 1
+
+        self.confirm_delete_task(task_id)
+        # self.controller.delete_task(task_id)
+        print("Delete btn clicked!!!")
+
+    def confirm_delete_task(self, task_id):
+        """Shows confirmation message for deleting the selected task
+
+        Parameters
+        ----------
+        task_id: int
+            id of a task that equals rowid in db (to make it equal to rowid you need to add 1)
+        """
+
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Question)
+
+        # msg.setText("Delete")
+        msg.setInformativeText("Are you sure you want to delete this item?")
+        msg.setWindowTitle("Message")
+        # msg.setDetailedText("The details are as follows:")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        # msg.buttonClicked.connect(self.delete_task)
+
+        return_val = msg.exec_()
+
+        if return_val == QMessageBox.Ok:
+            self.controller.delete_task(task_id)
+            item_idx = task_id - 1
+            self.task_list.takeItem(item_idx)
+        else:
+            print("Cancel was clicked")
+
+    def update_task_name(self, task_name, task_id):
+        """Updates the name of the task in the list on the main window after editing
+
+        Parameters
+        ----------
+        task_name: str
+            new name of the task after editing
+        task_id: int
+            task id which equals rowid in db.
+            To get the right id of the task in the widget_list you need to substitute 1 from task_id
+        """
+
+        print("We are in update-task-name")
+        list_task_id = task_id - 1
+        self.task_list.item(list_task_id).setText(task_name)

@@ -67,7 +67,7 @@ class Model:
         """Gets the list of all tasks from db"""
 
         tasks = []
-        query = "SELECT rowid, * FROM tasks"
+        query = "SELECT rowid, * FROM tasks ORDER BY rowid ASC"
         results = self.cursor.execute(query).fetchall()
         for result in results:
             row_id = result[0]
@@ -149,3 +149,18 @@ class Model:
         row = (new_name, due_date, notes, task_id)
         self.cursor.execute(query, row)
         self.app_db.commit()
+
+    def delete_task(self, task_id):
+        """Removes a task from db
+
+        Parameters
+        ----------
+        task_id - int
+        """
+
+        query = "DELETE from tasks WHERE rowid=?"
+        results = self.cursor.execute(query, (task_id,))
+        self.app_db.commit()
+
+        return True
+
