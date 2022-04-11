@@ -111,7 +111,7 @@ class Model:
 
         return Task(row_id, name, due_date, completed, notes)
 
-    def get_task_info(self, task_id) -> Task:
+    def get_task_info(self, task_id, task_name) -> Task:
         """Get a task info from db for edit window launch
 
          Parameters
@@ -120,18 +120,35 @@ class Model:
             id of a task that equals rowid in db
         """
 
-        query = "SELECT rowid, * FROM tasks WHERE rowid=?;"
+        query_select = "SELECT rowid, * FROM tasks WHERE rowid=?;"
         # row = task_name
         # make unique row_id and only return one task per query
-        results = self.cursor.execute(query, (task_id,))
-        for result in results:
-            row_id = result[0]
-            name = str(result[1])
-            due_date = str(result[2])
-            completed = str(result[3])
-            notes = str(result[4])
-        # return Task class instance
+        valid_result = self.cursor.execute(query_select, (task_id,)).fetchone()
+        # print("Here is valid result: ", task_id)
+        if valid_result is not None:
+            if valid_result[0] != task_id or valid_result[1] != task_name:
+                query = "SELECT rowid, *  FROM tasks WHERE name=?;"
+                result = self.cursor.execute(query, (task_name,)).fetchone()
+            else:
+                result = valid_result
+        else:
+            query = "SELECT rowid, *  FROM tasks WHERE name=?;"
+            result = self.cursor.execute(query, (task_name,)).fetchone()
+
+            # print("Task_id and task_name are NOT matched")
+            # print(f'This is result: {results}')
+            # for result in results:
+            #     print(result)
+
+        # print(result[0])
+        row_id = result[0]
+        name = str(result[1])
+        due_date = str(result[2])
+        completed = str(result[3])
+        notes = str(result[4])
+        #
         return Task(row_id, name, due_date, completed, notes)
+
 
     def update_task_info(self, task_id, new_name, due_date, notes):
         """Updates a task info in db
@@ -150,16 +167,29 @@ class Model:
         self.cursor.execute(query, row)
         self.app_db.commit()
 
-    def delete_task(self, task_id):
+    def delete_task(self, task_id, task_name):
         """Removes a task from db
 
         Parameters
         ----------
         task_id - int
         """
+        select_query = "SELECT rowid, name FROM tasks WHERE rowid=?"
+        results = self.cursor.execute(select_query, (task_id,)).fetchone()
+        print("Task id: " , task_id)
+        print("Task name: ", task_name)
+        print(results)
+        if results is not None:
+            rowid = results[0]
+            name = results[1]
+            if (rowid == task_id) and (name == task_name):
+                query = "DELETE FROM tasks WHERE rowid=?"
+                self.cursor.execute(query, (task_id,))
+                self.app_db.commit()
+                return True
 
-        query = "DELETE from tasks WHERE rowid=?"
-        self.cursor.execute(query, (task_id,))
+        query = "DELETE FROM tasks WHERE name=?"
+        self.cursor.execute(query, (task_name,))
         self.app_db.commit()
 
         return True

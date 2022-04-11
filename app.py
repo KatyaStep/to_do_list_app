@@ -24,20 +24,27 @@ class App(QApplication):
 
     def __init__(self, sys_argv):
         super().__init__(sys_argv)
+
+        test_mode = False
+        if sys_argv[1] == '--test_config':
+            test_mode = True
         self.app = QApplication(sys_argv)
         self.model = Model()
         self.controller = MainWindowController(self.model)
-        self.main_view = MainWindowView(self.controller)
+        self.main_view = MainWindowView(self.controller, test_mode)
 
         self.controller.on_start_up()
 
         self.main_view.show()
 
+        if sys_argv[1] == '--test_config':
+            print(f"Got our argument from command line: {sys_argv[1]}" )
+
         self.app.aboutToQuit.connect(self.close_event)
+
 
     def close_event(self):
         """Call the function clean from model.py"""
-
         print("hello exit")
         self.model.clean()
 

@@ -120,7 +120,7 @@ class MainWindowController(QObject):
         self.tasks = self.model.get_all_tasks()
         self.update_task_overview()
 
-    def show_edit_window(self, edit_window, task_id):
+    def show_edit_window(self, test_mode, edit_window, task_id, task_name):
         """Launches edit window after pressing edit btn
 
         Parameters
@@ -129,6 +129,7 @@ class MainWindowController(QObject):
             instance of EditWindow(QDialog)
         task_id: int
             id of the task in the list which eguals rowid in db
+        task_name:
         """
 
         # self.edit_task_name = task_name
@@ -136,10 +137,13 @@ class MainWindowController(QObject):
         self.set_edit_window(edit_window)
 
         # task = self.model.get_task_info(self.edit_task_name)
-        task = self.model.get_task_info(self.edit_task_id)
+        task = self.model.get_task_info(self.edit_task_id, task_name)
         # self.edit_view.task_info(task.id, task.name, task.due_date, task.completed, task.notes)
         self.edit_view.task_info(task)
-        self.edit_view.exec()
+        if not test_mode:
+            self.edit_view.exec()
+        else:
+            self.edit_view.show()
 
     def save_changes(self, task_name, due_date, notes):
         """Saves changes after editing a task
@@ -157,7 +161,7 @@ class MainWindowController(QObject):
         self.model.update_task_info(self.edit_task_id, task_name, due_date, notes)
         self.view.update_task_name(task_name, self.edit_task_id)
 
-    def delete_task(self, task_id):
+    def delete_task(self, task_id, task_name):
         """Call model instance to delete a task from db
 
         Parameters
@@ -166,5 +170,5 @@ class MainWindowController(QObject):
             task_id that equals rowid in db
         """
 
-        if self.model.delete_task(task_id):
+        if self.model.delete_task(task_id, task_name):
             print("Deleted successfully")

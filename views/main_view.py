@@ -55,10 +55,11 @@ class EditWindow(QDialog):
     get_changes(self)
     """
 
-    def __init__(self, controller):
+    def __init__(self, controller, mode):
         super().__init__()
         self.controller = controller
         self.controller.set_edit_window(self)
+        self.test_mode = mode
         self.edit_ui = "views/edit_window.ui"
         self.confirm_dialog = None
         # self.confirm_dialog = "views/confirmation_save_dialog.ui"
@@ -160,22 +161,23 @@ class EditWindow(QDialog):
         self.show_confirm_dialog()
         self.close()
 
-    @staticmethod
-    def show_confirm_dialog():
+
+    def show_confirm_dialog(self):
         """Create a confirmation message window to notify a user about successfully saved changes"""
 
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
+        if not self.test_mode:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
 
-        msg.setText("Congratulations")
-        msg.setInformativeText("Your changes have been successfully saved!")
-        msg.setWindowTitle("Message")
-        # msg.setDetailedText("The details are as follows:")
-        msg.setStandardButtons(QMessageBox.Ok)
-        # msg.buttonClicked.connect(msgbtn)
+            msg.setText("Congratulations")
+            msg.setInformativeText("Your changes have been successfully saved!")
+            msg.setWindowTitle("Message")
+            # msg.setDetailedText("The details are as follows:")
+            msg.setStandardButtons(QMessageBox.Ok)
+            # msg.buttonClicked.connect(msgbtn)
 
-        retval = msg.exec_()
-        print("value of pressed message box button:", retval)
+            retval = msg.exec_()
+            print("value of pressed message box button:", retval)
 
 
 class MainWindowView(QMainWindow):
@@ -201,7 +203,7 @@ class MainWindowView(QMainWindow):
 
     """
 
-    def __init__(self, controller):
+    def __init__(self, controller, mode):
         """
         Parameters
         ----------
@@ -212,9 +214,11 @@ class MainWindowView(QMainWindow):
         super().__init__()
         self.controller = controller
         self.controller.set_view(self)
+        self.test_mode = mode
         self.main_window_ui = "views/mainwindow.ui"
         loadUi(self.main_window_ui, self)
 
+        self.selected_item_name = None
         # self.controller.get_task_list()
         # self.controller.get_num_all_tasks()
         self.disable_edit_menu()
@@ -318,6 +322,10 @@ class MainWindowView(QMainWindow):
         # self.task_name = item.text()
         # print(self.task_name)
         # print(f'{item.text()} was clicked!!!!')
+        for i in range(self.task_list.count()):
+            if self.task_list.item(i) != item:
+                self.task_list.item(i).setCheckState(QtCore.Qt.Unchecked)
+
         if item.checkState():
             item.setCheckState(QtCore.Qt.Unchecked)
             self.disable_edit_menu()
@@ -326,6 +334,7 @@ class MainWindowView(QMainWindow):
             item.setCheckState(QtCore.Qt.Checked)
             self.enable_edit_menu()
 
+        self.selected_item_name = item.text()
         # edit_window = EditWindow(self.controller)
         # edit_window.show_window()
 
@@ -335,20 +344,24 @@ class MainWindowView(QMainWindow):
         """Calls edit menu after edit button was clicked"""
 
         print('edit btn was clicked!!!!')
-        edit_window = EditWindow(self.controller)
+        edit_window = EditWindow(self.controller, self.test_mode)
         task_id = self.task_list.currentRow() + 1  # because in db row_id starts with 1
-        print(task_id)
-        self.controller.show_edit_window(edit_window, task_id)
+        print(self.selected_item_name)
+
+        self.controller.show_edit_window(self.test_mode, edit_window, task_id, self.selected_item_name)
 
     def click_delete_btn(self):
         """Calls controller function to delete the selected task"""
-        task_id = self.task_list.currentRow() + 1  # # because in db row_id starts with 1
+        task_id = self.task_list.currentRow() + 1# # because in db row_id starts with 1
+        # task_name = self.task_list.item(task_id).text()
 
-        self.confirm_delete_task(task_id)
+        print(f"THIS IS TASK NAME: {self.selected_item_name}")
+
+        self.confirm_delete_task(task_id, self.selected_item_name)
         # self.controller.delete_task(task_id)
         print("Delete btn clicked!!!")
 
-    def confirm_delete_task(self, task_id):
+    def confirm_delete_task(self, task_id, task_name):
         """Shows confirmation message for deleting the selected task
 
         Parameters
@@ -356,21 +369,28 @@ class MainWindowView(QMainWindow):
         task_id: int
             id of a task that equals rowid in db (to make it equal to rowid you need to add 1)
         """
+        confirm_delete = False
 
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Question)
+        if self.test_mode:
+            confirm_delete = True
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Question)
 
-        # msg.setText("Delete")
-        msg.setInformativeText("Are you sure you want to delete this item?")
-        msg.setWindowTitle("Message")
-        # msg.setDetailedText("The details are as follows:")
-        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        # msg.buttonClicked.connect(self.delete_task)
+            # msg.setText("Delete")
+            msg.setInformativeText("Are you sure you want to delete this item?")
+            msg.setWindowTitle("Message")
+            # msg.setDetailedText("The details are as follows:")
+            msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            # msg.buttonClicked.connect(self.delete_task)
 
-        return_val = msg.exec_()
+            return_val = msg.exec_()
 
-        if return_val == QMessageBox.Ok:
-            self.controller.delete_task(task_id)
+            if return_val == QMessageBox.Ok:
+                confirm_delete = True
+
+        if confirm_delete:
+            self.controller.delete_task(task_id, task_name)
             item_idx = task_id - 1
             self.task_list.takeItem(item_idx)
         else:
