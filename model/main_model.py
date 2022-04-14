@@ -4,7 +4,7 @@ import sqlite3
 
 def get_db_connection():
     """Connect to the db"""
-    return sqlite3.connect('/Users/katestepanova/repos/to_do_list_app/data/data.db')
+    return sqlite3.connect("/Users/katestepanova/repos/to_do_list_app/data/data.db")
 
 
 class Task:
@@ -32,7 +32,7 @@ class Task:
 
 class Model:
     """
-    A class used to represent queries to db.
+     A class that gets/sends data from/into db.
 
     Methods
     -------
@@ -70,11 +70,12 @@ class Model:
         query = "SELECT rowid, * FROM tasks ORDER BY rowid ASC"
         results = self.cursor.execute(query).fetchall()
         for result in results:
-            row_id = result[0]
-            name = str(result[1])
-            due_date = str(result[2])
-            completed = str(result[3])
-            notes = str(result[4])
+            # row_id = result[0]
+            # name = str(result[1])
+            # due_date = str(result[2])
+            # completed = str(result[3])
+            # notes = str(result[4])
+            row_id, name, due_date, completed, notes = result
             tasks.append(Task(row_id, name, due_date, completed, notes))
 
         return tasks
@@ -88,8 +89,10 @@ class Model:
             the name of a new task
         """
 
-        query = "INSERT INTO tasks(name, due_date, completed, notes) VALUES (?, ?, ?, ?)"
-        row = (task_name, 'never',  'False', 'NULL')
+        query = (
+            "INSERT INTO tasks(name, due_date, completed, notes) VALUES (?, ?, ?, ?)"
+        )
+        row = (task_name, "never", "False", "NULL")
 
         self.cursor.execute(query, row)
         self.app_db.commit()
@@ -98,14 +101,16 @@ class Model:
         """Gets last added task from db"""
 
         # tasks = []
-        query = 'SELECT rowid, * FROM tasks ORDER BY rowid ASC'
+        query = "SELECT rowid, * FROM tasks ORDER BY rowid ASC;"
         results = self.cursor.execute(query).fetchall()[-1]
 
-        row_id = results[0]
-        name = str(results[1])
-        due_date = str(results[2])
-        completed = str(results[3])
-        notes = str(results[4])
+        row_id, name, due_date, completed, notes = results
+
+        # row_id = results[0]
+        # name = str(results[1])
+        # due_date = str(results[2])
+        # completed = str(results[3])
+        # notes = str(results[4])
 
         # tasks.append(Task(row_id, name, due_date, completed, notes))
 
@@ -141,16 +146,16 @@ class Model:
             #     print(result)
 
         # print(result[0])
-        row_id = result[0]
-        name = str(result[1])
-        due_date = str(result[2])
-        completed = str(result[3])
-        notes = str(result[4])
+        # row_id = result[0]
+        # name = str(result[1])
+        # due_date = str(result[2])
+        # completed = str(result[3])
+        # notes = str(result[4])
+        row_id, name, due_date, completed, notes = result
         #
         return Task(row_id, name, due_date, completed, notes)
 
-
-    def update_task_info(self, task_id, new_name, due_date, notes):
+    def update_task_info(self, previous_name, task_id, new_name, due_date, notes):
         """Updates a task info in db
 
         Parameters
@@ -162,8 +167,21 @@ class Model:
         """
 
         print("We are in update task info", new_name, due_date, notes)
-        query = "UPDATE tasks  SET name=?, due_date=?, notes=? WHERE rowid=?"
-        row = (new_name, due_date, notes, task_id)
+        select_query = "SELECT rowid, name FROM tasks WHERE rowid=?"
+        results = self.cursor.execute(select_query, (task_id,)).fetchone()
+
+        if results is not None:
+            rowid = results[0]
+            name = results[1]
+            if (rowid == task_id) and (name == new_name):
+                query = "UPDATE tasks  SET name=?, due_date=?, notes=? WHERE rowid=?"
+                row = (new_name, due_date, notes, task_id)
+                self.cursor.execute(query, row)
+                self.app_db.commit()
+                return
+
+        query = "UPDATE tasks  SET name=?, due_date=?, notes=? WHERE name=?"
+        row = (new_name, due_date, notes, previous_name)
         self.cursor.execute(query, row)
         self.app_db.commit()
 
@@ -176,9 +194,9 @@ class Model:
         """
         select_query = "SELECT rowid, name FROM tasks WHERE rowid=?"
         results = self.cursor.execute(select_query, (task_id,)).fetchone()
-        print("Task id: " , task_id)
-        print("Task name: ", task_name)
-        print(results)
+        # print("Task id: " , task_id)
+        # print("Task name: ", task_name)
+        # print(results)
         if results is not None:
             rowid = results[0]
             name = results[1]
@@ -193,3 +211,61 @@ class Model:
         self.app_db.commit()
 
         return True
+
+    def complete_task(self, task_id, task_name):
+        """Complete task changing the flag 'complete' in db"
+
+        Parameters
+        ----------
+        task_id: int
+        task_name: str
+        """
+
+        select_query = "SELECT rowid, name FROM tasks WHERE rowid=?"
+        results = self.cursor.execute(select_query, (task_id,)).fetchone()
+        # print("Task id: " , task_id)
+        # print("Task name: ", task_name)
+        # print(results)
+        if results is not None:
+            rowid = results[0]
+            name = results[1]
+            if (rowid == task_id) and (name == task_name):
+                query = "UPDATE tasks SET completed = ? WHERE rowid=?"
+                self.cursor.execute(
+                    query,
+                    (
+                        "True",
+                        task_id,
+                    ),
+                )
+                self.app_db.commit()
+                return True
+
+        query = "UPDATE tasks SET completed = ? WHERE name=?"
+        self.cursor.execute(
+            query,
+            (
+                "True",
+                task_name,
+            ),
+        )
+        self.app_db.commit()
+
+        return True
+
+    def get_completed_tasks(self):
+        """Gets the list of all COMPLETED tasks from db"""
+
+        tasks = []
+        query = "SELECT rowid, * FROM tasks WHERE completed = ? ORDER BY rowid ASC"
+        results = self.cursor.execute(query, ("True",)).fetchall()
+        for result in results:
+            # row_id = result[0]
+            # name = str(result[1])
+            # due_date = str(result[2])
+            # completed = str(result[3])
+            # notes = str(result[4])
+            row_id, name, due_date, completed, notes = result
+            tasks.append(Task(row_id, name, due_date, completed, notes))
+
+        return tasks

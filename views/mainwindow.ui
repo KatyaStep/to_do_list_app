@@ -34,13 +34,13 @@
    <string notr="true">background-color: #d7e7f5;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="left_panel_menu">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>240</y>
-      <width>161</width>
-      <height>641</height>
+      <x>0</x>
+      <y>280</y>
+      <width>171</width>
+      <height>611</height>
      </rect>
     </property>
     <property name="maximumSize">
@@ -51,39 +51,35 @@
     </property>
     <property name="styleSheet">
      <string notr="true">font: 14pt &quot;Chalkduster&quot;;
-color: black;</string>
+color: black;
+padding-left: 20px;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
     </property>
     <item>
      <property name="text">
-      <string>Inbox</string>
+      <string>All Tasks</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>    All Tasks</string>
+      <string>Today</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>    Today</string>
+      <string>Tomorrow</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>    Tommorow</string>
+      <string>This Week</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>    This Week</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>    Trash</string>
+      <string>Trash</string>
      </property>
     </item>
    </widget>
@@ -150,6 +146,9 @@ border-radius: 10px;</string>
      <property name="placeholderText">
       <string>  Add a task...</string>
      </property>
+     <property name="clearButtonEnabled">
+      <bool>false</bool>
+     </property>
     </widget>
     <widget class="Line" name="line_2">
      <property name="geometry">
@@ -200,7 +199,7 @@ font: 12pt &quot;Chalkduster&quot;;
       <number>-1</number>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="imcomplete_btn">
      <property name="geometry">
       <rect>
        <x>320</x>
@@ -233,7 +232,7 @@ border-radius: 10px;</string>
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="completed_btn">
      <property name="geometry">
       <rect>
        <x>460</x>
@@ -350,7 +349,7 @@ color: rgb(171, 171, 171);</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>360</y>
+      <y>430</y>
       <width>181</width>
       <height>21</height>
      </rect>
@@ -359,7 +358,7 @@ color: rgb(171, 171, 171);</string>
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="all_tasks_lbl">
     <property name="geometry">
      <rect>
       <x>800</x>
@@ -373,7 +372,7 @@ color: rgb(171, 171, 171);</string>
 font: 20pt &quot;Chalkduster&quot;;</string>
     </property>
     <property name="text">
-     <string>All Tasks </string>
+     <string>All Tasks</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -433,6 +432,9 @@ color: #0060bf;</string>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="alltasks_overdue" native="true">
@@ -490,6 +492,9 @@ font: 19px &quot;Chalkduster&quot;;
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="alltasks_completed" native="true">
@@ -516,7 +521,8 @@ font: 19px &quot;Chalkduster&quot;;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">font: 12pt &quot;Chalkduster&quot;;
-color: rgb(171, 171, 171);</string>
+/*color: rgb(171, 171, 171);*/
+color: black;</string>
      </property>
      <property name="text">
       <string>completed</string>
@@ -536,7 +542,8 @@ color: rgb(171, 171, 171);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">font-size: 19px;
-color: rgb(171, 171, 171);</string>
+/*color: rgb(171, 171, 171);*/
+color: rgb(0, 143, 0);</string>
      </property>
      <property name="text">
       <string/>
@@ -547,7 +554,30 @@ color: rgb(171, 171, 171);</string>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
+   </widget>
+   <widget class="QLineEdit" name="menu_header">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 14pt &quot;Chalkduster&quot;;
+color: black;</string>
+    </property>
+    <property name="text">
+     <string>Inbox</string>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
    </widget>
   </widget>
  </widget>

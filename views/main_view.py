@@ -2,7 +2,7 @@
 
 from datetime import date, timedelta
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QDialog, QMessageBox
 from PyQt5.uic import loadUi
 from qtconsole.qtconsoleapp import QtCore
@@ -88,8 +88,8 @@ class EditWindow(QDialog):
             0: due_date,
             1: f'Today: {current_date.strftime("%b/%d")}',
             2: f'Tomorrow: {(current_date + timedelta(days=1)).strftime("%b/%d")}',
-            3: 'No due date',
-            4: 'Calendar'
+            3: "No due date",
+            4: "Calendar",
         }
         for index, item in due_date_options.items():
             self.due_date_box.insertItem(index, item)
@@ -134,6 +134,7 @@ class EditWindow(QDialog):
         self.due_date_list_options(task.due_date)
         # self.due_date_box.setCurrentText(task.due_date)
         self.notes_lineEdit.setText(task.notes)
+
         # self.edit_completed_checkBox.setCheckState(QtCore.Qt.Unchecked)
 
     # def get_changes(self):
@@ -160,7 +161,6 @@ class EditWindow(QDialog):
         self.controller.save_changes(task_name, due_date, notes)
         self.show_confirm_dialog()
         self.close()
-
 
     def show_confirm_dialog(self):
         """Create a confirmation message window to notify a user about successfully saved changes"""
@@ -227,6 +227,7 @@ class MainWindowView(QMainWindow):
         self.edit_btn.clicked.connect(self.click_edit_btn)
         self.delete_btn.clicked.connect(self.click_delete_btn)
         self.add_task_qline.returnPressed.connect(self.get_task_text)
+        self.complete_main_checkbox.clicked.connect(self.complete_task)
 
     def disable_edit_menu(self):
         """Disables the edit menu"""
@@ -234,13 +235,19 @@ class MainWindowView(QMainWindow):
         self.edit_btn.setEnabled(False)
         self.delete_btn.setEnabled(False)
 
-        self.edit_btn.setStyleSheet("border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
-                                    "rgb(171, 171, 171); font: 12pt 'Chalkduster';")
-        self.delete_btn.setStyleSheet("border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
-                                      "rgb(171, 171, 171); font: 12pt 'Chalkduster';")
+        self.edit_btn.setStyleSheet(
+            "border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
+            "rgb(171, 171, 171); font: 12pt 'Chalkduster';"
+        )
+        self.delete_btn.setStyleSheet(
+            "border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
+            "rgb(171, 171, 171); font: 12pt 'Chalkduster';"
+        )
 
         self.complete_main_checkbox.setEnabled(False)
-        self.complete_main_checkbox.setStyleSheet("color: rgb(171, 171, 171); font: 12pt 'Chalkduster';")
+        self.complete_main_checkbox.setStyleSheet(
+            "color: rgb(171, 171, 171); font: 12pt 'Chalkduster';"
+        )
 
     def enable_edit_menu(self):
         """Enables the edit menu"""
@@ -248,13 +255,19 @@ class MainWindowView(QMainWindow):
         self.edit_btn.setEnabled(True)
         self.delete_btn.setEnabled(True)
 
-        self.edit_btn.setStyleSheet("color: black; border-radius: 6px; border : 2px solid grey; background-color: "
-                                    "#dbe8f6; font: 12pt 'Chalkduster';")
-        self.delete_btn.setStyleSheet("color: black; border-radius: 6px; border : 2px solid grey; background-color: "
-                                      "#dbe8f6; font: 12pt 'Chalkduster';")
+        self.edit_btn.setStyleSheet(
+            "color: black; border-radius: 6px; border : 2px solid grey; background-color: "
+            "#dbe8f6; font: 12pt 'Chalkduster';"
+        )
+        self.delete_btn.setStyleSheet(
+            "color: black; border-radius: 6px; border : 2px solid grey; background-color: "
+            "#dbe8f6; font: 12pt 'Chalkduster';"
+        )
 
         self.complete_main_checkbox.setEnabled(True)
-        self.complete_main_checkbox.setStyleSheet("color: black; font: 12pt 'Chalkduster';")
+        self.complete_main_checkbox.setStyleSheet(
+            "color: black; font: 12pt 'Chalkduster';"
+        )
 
     def add_task(self, task_name):
         """Adds a new task to the task_list widget
@@ -305,7 +318,7 @@ class MainWindowView(QMainWindow):
 
     def get_task_text(self):
         """Gets a task text after user typed it in the field "Add a task". Calls a controller to add the task
-         to the list. Cleans the field"""
+        to the list. Cleans the field"""
 
         text = self.add_task_qline.text()
         self.controller.add_task_to_the_list(text)
@@ -325,6 +338,7 @@ class MainWindowView(QMainWindow):
         for i in range(self.task_list.count()):
             if self.task_list.item(i) != item:
                 self.task_list.item(i).setCheckState(QtCore.Qt.Unchecked)
+                self.complete_main_checkbox.setCheckState(QtCore.Qt.Unchecked)
 
         if item.checkState():
             item.setCheckState(QtCore.Qt.Unchecked)
@@ -343,16 +357,20 @@ class MainWindowView(QMainWindow):
     def click_edit_btn(self):
         """Calls edit menu after edit button was clicked"""
 
-        print('edit btn was clicked!!!!')
+        print("edit btn was clicked!!!!")
         edit_window = EditWindow(self.controller, self.test_mode)
         task_id = self.task_list.currentRow() + 1  # because in db row_id starts with 1
         print(self.selected_item_name)
 
-        self.controller.show_edit_window(self.test_mode, edit_window, task_id, self.selected_item_name)
+        self.controller.show_edit_window(
+            self.test_mode, edit_window, task_id, self.selected_item_name
+        )
 
     def click_delete_btn(self):
         """Calls controller function to delete the selected task"""
-        task_id = self.task_list.currentRow() + 1# # because in db row_id starts with 1
+        task_id = (
+            self.task_list.currentRow() + 1
+        )  # # because in db row_id starts with 1
         # task_name = self.task_list.item(task_id).text()
 
         print(f"THIS IS TASK NAME: {self.selected_item_name}")
@@ -411,3 +429,25 @@ class MainWindowView(QMainWindow):
         print("We are in update-task-name")
         list_task_id = task_id - 1
         self.task_list.item(list_task_id).setText(task_name)
+
+    def complete_task(self):
+        """Complete the task"""
+        if self.complete_main_checkbox.checkState():
+            task_id = self.task_list.currentRow() + 1
+            task_name = self.selected_item_name
+            self.controller.complete_task(task_id, task_name)
+
+            if self.test_mode:
+                self.remove_task_from_list()
+            else:
+                QTimer.singleShot(1000, self.remove_task_from_list)
+
+            print("Trying to complete this task")
+        else:
+            print("Task is not gonna be complete")
+
+    def remove_task_from_list(self):
+        """Remove task from the list after completion"""
+        self.task_list.takeItem(self.task_list.currentRow())
+        self.complete_main_checkbox.setCheckState(QtCore.Qt.Unchecked)
+        self.controller.update_task_overview()

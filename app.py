@@ -2,6 +2,7 @@
 
 import sys
 
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication
 
 from controllers.main_controller import MainWindowController
@@ -26,7 +27,7 @@ class App(QApplication):
         super().__init__(sys_argv)
 
         test_mode = False
-        if sys_argv[1] == '--test_config':
+        if sys_argv[1] == "--test_config":
             test_mode = True
         self.app = QApplication(sys_argv)
         self.model = Model()
@@ -37,11 +38,10 @@ class App(QApplication):
 
         self.main_view.show()
 
-        if sys_argv[1] == '--test_config':
-            print(f"Got our argument from command line: {sys_argv[1]}" )
+        if sys_argv[1] == "--test_config":
+            print(f"Got our argument from command line: {sys_argv[1]}")
 
         self.app.aboutToQuit.connect(self.close_event)
-
 
     def close_event(self):
         """Call the function clean from model.py"""
@@ -49,6 +49,7 @@ class App(QApplication):
         self.model.clean()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = App(sys.argv)
+    app.setWindowIcon(QtGui.QIcon("app_icon.png"))
     sys.exit(app.exec())

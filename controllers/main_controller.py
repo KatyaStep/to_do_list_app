@@ -41,6 +41,7 @@ class MainWindowController(QObject):
         self.view = None
         self.edit_view = None
         self.edit_task_name = None
+        self.task = None
         # self.confirmation_view = None
 
     def set_view(self, view):
@@ -78,15 +79,16 @@ class MainWindowController(QObject):
         """Calls methods 'update_task_list(), update_task_overview() on the start of the app."""
 
         self.update_task_list()
-        self.update_task_overview()
+        self.get_task_overview()
 
     def update_task_list(self):
         """Calling the view module to represent all task on the main page of the app"""
 
         for task in self.tasks:
-            self.view.add_task(task.name)
+            if task.completed == "False":
+                self.view.add_task(task.name)
 
-    def update_task_overview(self):
+    def get_task_overview(self):
         """Updates tasks overview number on the main page of the app"""
 
         overdue_tasks = []
@@ -98,8 +100,11 @@ class MainWindowController(QObject):
         for task in self.tasks:
             if task.due_date < format_date:
                 overdue_tasks.append(task)
-            if task.completed == 'True':
+            if task.completed == "True":
                 completed_tasks.append(task)
+        #
+        # for task in completed_tasks:
+        #     print("This is completed task: ", task.name)
 
         self.view.update_task_count(str(len(self.tasks)))
         self.view.update_overdue_task_count(str(len(overdue_tasks)))
@@ -118,7 +123,7 @@ class MainWindowController(QObject):
         task = self.model.get_last_added_task()
         self.view.add_task(task.name)
         self.tasks = self.model.get_all_tasks()
-        self.update_task_overview()
+        self.get_task_overview()
 
     def show_edit_window(self, test_mode, edit_window, task_id, task_name):
         """Launches edit window after pressing edit btn
@@ -137,13 +142,13 @@ class MainWindowController(QObject):
         self.set_edit_window(edit_window)
 
         # task = self.model.get_task_info(self.edit_task_name)
-        task = self.model.get_task_info(self.edit_task_id, task_name)
+        self.task = self.model.get_task_info(self.edit_task_id, task_name)
         # self.edit_view.task_info(task.id, task.name, task.due_date, task.completed, task.notes)
-        self.edit_view.task_info(task)
+        self.edit_view.task_info(self.task)
         if not test_mode:
             self.edit_view.exec()
-        else:
-            self.edit_view.show()
+        # else:
+        #     self.edit_view.show()
 
     def save_changes(self, task_name, due_date, notes):
         """Saves changes after editing a task
@@ -158,7 +163,9 @@ class MainWindowController(QObject):
             notes for the task
         """
 
-        self.model.update_task_info(self.edit_task_id, task_name, due_date, notes)
+        self.model.update_task_info(
+            self.task.name, self.edit_task_id, task_name, due_date, notes
+        )
         self.view.update_task_name(task_name, self.edit_task_id)
 
     def delete_task(self, task_id, task_name):
@@ -168,7 +175,25 @@ class MainWindowController(QObject):
         ----------
         task_id: int
             task_id that equals rowid in db
+        task_name: str
         """
 
         if self.model.delete_task(task_id, task_name):
             print("Deleted successfully")
+
+    def complete_task(self, task_id, task_name):
+        """Call model instance to change complete flag in db
+
+        Parameters
+        ----------
+        task_id: int
+            task_id that equals rowid in db
+        task_name: str
+        """
+
+        self.model.complete_task(task_id, task_name)
+
+    def update_task_overview(self):
+        """Call model instance to update task overview number on the main screen of the app."""
+        completed_tasks = self.model.get_completed_tasks()
+        self.view.update_completed_task_update(str(len(completed_tasks)))
