@@ -1,4 +1,4 @@
-"""This module contains automation tests """
+"""This module contains tests """
 
 from datetime import date
 
@@ -7,7 +7,6 @@ from qtconsole.qtconsoleapp import QtCore
 from mock_model import MockModel
 from views.main_view import MainWindowView, EditWindow
 from controllers.main_controller import MainWindowController
-
 
 
 def test_add_new_task(qtbot, name):

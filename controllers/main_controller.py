@@ -162,10 +162,17 @@ class MainWindowController(QObject):
         notes: str
             notes for the task
         """
-
-        self.model.update_task_info(
-            self.task.name, self.edit_task_id, task_name, due_date, notes
-        )
+        data = {
+            'previous_name': self.task.name,
+            'edit_task_id': self.edit_task_id,
+            'new_task_name': task_name,
+            'due_date': due_date,
+            'notes': notes,
+        }
+        self.model.update_task_info(data)
+        # self.model.update_task_info(
+        #     self.task.name, self.edit_task_id, task_name, due_date, notes
+        # )
         self.view.update_task_name(task_name, self.edit_task_id)
 
     def delete_task(self, task_id, task_name):

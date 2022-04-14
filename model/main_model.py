@@ -22,12 +22,12 @@ class Task:
     notes: str
     """
 
-    def __init__(self, task_id, name, due_date, completed, notes):
-        self.task_id = task_id
-        self.name = name
-        self.due_date = due_date
-        self.completed = completed
-        self.notes = notes
+    def __init__(self, task):
+        self.task_id = task['task_id']
+        self.name = task['name']
+        self.due_date = task['due_date']
+        self.completed = task['completed']
+        self.notes = task['notes']
 
 
 class Model:
@@ -76,7 +76,15 @@ class Model:
             # completed = str(result[3])
             # notes = str(result[4])
             row_id, name, due_date, completed, notes = result
-            tasks.append(Task(row_id, name, due_date, completed, notes))
+            data = {
+                'task_id': row_id,
+                'name': name,
+                'due_date': due_date,
+                'completed': completed,
+                'notes': notes,
+            }
+            # tasks.append(Task(row_id, name, due_date, completed, notes))
+            tasks.append(Task(data))
 
         return tasks
 
@@ -105,7 +113,13 @@ class Model:
         results = self.cursor.execute(query).fetchall()[-1]
 
         row_id, name, due_date, completed, notes = results
-
+        data = {
+            'task_id': row_id,
+            'name': name,
+            'due_date': due_date,
+            'completed': completed,
+            'notes': notes,
+        }
         # row_id = results[0]
         # name = str(results[1])
         # due_date = str(results[2])
@@ -114,7 +128,9 @@ class Model:
 
         # tasks.append(Task(row_id, name, due_date, completed, notes))
 
-        return Task(row_id, name, due_date, completed, notes)
+        # return Task(row_id, name, due_date, completed, notes)
+
+        return Task(data)
 
     def get_task_info(self, task_id, task_name) -> Task:
         """Get a task info from db for edit window launch
@@ -152,10 +168,19 @@ class Model:
         # completed = str(result[3])
         # notes = str(result[4])
         row_id, name, due_date, completed, notes = result
-        #
-        return Task(row_id, name, due_date, completed, notes)
 
-    def update_task_info(self, previous_name, task_id, new_name, due_date, notes):
+        data = {
+            'task_id': row_id,
+            'name': name,
+            'due_date': due_date,
+            'completed': completed,
+            'notes': notes,
+        }
+        # return Task(row_id, name, due_date, completed, notes)
+        return Task(data)
+
+    # def update_task_info(self, previous_name, task_id, new_name, due_date, notes):
+    def update_task_info(self, updated_data):
         """Updates a task info in db
 
         Parameters
@@ -166,7 +191,11 @@ class Model:
         notes - str
         """
 
-        print("We are in update task info", new_name, due_date, notes)
+        previous_name, task_id, new_name, due_date, notes = updated_data.values()
+
+        # print("We are in update task info", new_name, due_date, notes)
+        print(f'This is previous name {previous_name}')
+        print(f'This is task_id name {task_id}')
         select_query = "SELECT rowid, name FROM tasks WHERE rowid=?"
         results = self.cursor.execute(select_query, (task_id,)).fetchone()
 
@@ -266,6 +295,14 @@ class Model:
             # completed = str(result[3])
             # notes = str(result[4])
             row_id, name, due_date, completed, notes = result
-            tasks.append(Task(row_id, name, due_date, completed, notes))
+            data = {
+                'task_id': row_id,
+                'name': name,
+                'due_date': due_date,
+                'completed': completed,
+                'notes': notes,
+            }
+            tasks.append(Task(data))
+            # tasks.append(Task(row_id, name, due_date, completed, notes))
 
         return tasks
