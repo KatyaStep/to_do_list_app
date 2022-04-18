@@ -112,8 +112,8 @@ class MockModel:
             if task["row_id"] == task_id:
                 # print(f"THIS IS TASK NAME FOR EDIT WINDOW: {task['name']}")
                 temp_task_storage = {
-                    'task_id': task["row_id"],
-                    'name':  task["name"],
+                    'task_id': task_id,
+                    'name':  task_name,
                     'due_date': task["due_date"],
                     'completed': task["completed"],
                     'notes': task["notes"],
@@ -136,7 +136,7 @@ class MockModel:
         due_date - str
         notes - str
         """
-        previous_name, task_id, new_name, due_date, notes = updated_data.values()
+        _, task_id, new_name, due_date, notes = updated_data.values()
         for _, task in enumerate(self.data):
             if task["row_id"] == task_id:
                 task["name"] = new_name
@@ -144,7 +144,7 @@ class MockModel:
                 task["notes"] = notes
                 # return True
 
-    def delete_task(self, task_id, task_name):
+    def delete_task(self, task_to_delete):
         """Removes a task from db
 
         Parameters
@@ -153,10 +153,10 @@ class MockModel:
         """
 
         for idx, task in enumerate(self.data):
-            if task["row_id"] == task_id:
+            if task["row_id"] == task_to_delete['task_id']:
                 self.data.pop(idx)
 
-    def complete_task(self, task_id, task_name):
+    def complete_task(self, task_to_complete):
         """Complete task
 
         Parameters
@@ -167,7 +167,7 @@ class MockModel:
         """
 
         for _, task in enumerate(self.data):
-            if task["row_id"] == task_id:
+            if task["row_id"] == task_to_complete['task_id']:
                 task["completed"] = "True"
 
     def get_completed_tasks(self):

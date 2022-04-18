@@ -184,8 +184,11 @@ class MainWindowController(QObject):
             task_id that equals rowid in db
         task_name: str
         """
-
-        if self.model.delete_task(task_id, task_name):
+        data = {
+            'task_id':task_id,
+            'task_name': task_name,
+        }
+        if self.model.delete_task(data):
             print("Deleted successfully")
 
     def complete_task(self, task_id, task_name):
@@ -197,8 +200,11 @@ class MainWindowController(QObject):
             task_id that equals rowid in db
         task_name: str
         """
-
-        self.model.complete_task(task_id, task_name)
+        data = {
+            'task_id':task_id,
+            'task_name': task_name,
+        }
+        self.model.complete_task(data)
 
     def update_task_overview(self):
         """Call model instance to update task overview number on the main screen of the app."""

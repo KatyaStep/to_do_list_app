@@ -10,7 +10,7 @@ The to_do_list_app is an application that allows users to keep track of tasks th
 5. [Tests for the app](#tests-for-the-app)
 
 ### General Info
-
+***
 The app has the following functionality:
 - add a new task
 - edit a task:  

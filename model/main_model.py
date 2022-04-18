@@ -214,13 +214,15 @@ class Model:
         self.cursor.execute(query, row)
         self.app_db.commit()
 
-    def delete_task(self, task_id, task_name):
+    def delete_task(self, task):
         """Removes a task from db
 
         Parameters
         ----------
         task_id - int
         """
+        task_id, task_name = task.values()
+        print(f'DELETE  task: {task_name}')
         select_query = "SELECT rowid, name FROM tasks WHERE rowid=?"
         results = self.cursor.execute(select_query, (task_id,)).fetchone()
         # print("Task id: " , task_id)
@@ -241,7 +243,7 @@ class Model:
 
         return True
 
-    def complete_task(self, task_id, task_name):
+    def complete_task(self, task):
         """Complete task changing the flag 'complete' in db"
 
         Parameters
@@ -250,6 +252,8 @@ class Model:
         task_name: str
         """
 
+        task_id, task_name = task.values()
+        print(f'COMPLETE task: {task_name}')
         select_query = "SELECT rowid, name FROM tasks WHERE rowid=?"
         results = self.cursor.execute(select_query, (task_id,)).fetchone()
         # print("Task id: " , task_id)
