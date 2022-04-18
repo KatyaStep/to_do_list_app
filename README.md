@@ -44,3 +44,14 @@ Note: if you want to manage db with GUI then you need to
 ***
 ### Tests for the app
 ***
+*  Tests are located in the folder [tests]
+*  There are 3 files in the folder:
+   * [conftest.py] : contains setttings for pytest and parsing command line arguments
+   * [mock_model.py]: mocking db. Instead of db tests are working with dictionary.
+   * [test_view.py]: file contains test cases. 
+* To start tests you need to type in the terminal the following command:
+````
+$ python3 -m pytest --test_config tests/test_view.py
+
+Note: --test_config is an argument that lets test environment know that we run tests. 
+````
