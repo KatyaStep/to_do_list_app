@@ -114,7 +114,7 @@ class MainWindowController(QObject):
 
         self.view.update_task_count(str(len(all_tasks)))
         self.view.update_overdue_task_count(str(len(overdue_tasks)))
-        self.view.update_completed_task_update(str(len(completed_tasks)))
+        self.view.update_completed_task_number(str(len(completed_tasks)))
 
     def add_task_to_the_list(self, task_name):
         """Adds a new task to the list on the main page of the app
@@ -218,4 +218,19 @@ class MainWindowController(QObject):
         """Call model instance to update task overview number on the main screen of the app."""
 
         completed_tasks = self.model.get_completed_tasks()
-        self.view.update_completed_task_update(str(len(completed_tasks)))
+        self.view.update_completed_task_number(str(len(completed_tasks)))
+
+    def get_incomplete_task(self):
+        """Call model instance to get all incomplete tasks from db"""
+        incomplete_tasks = self.model.get_incomplete_tasks()
+        self.view.clear_task_list()
+        for task in incomplete_tasks:
+            self.view.add_task(task)
+
+    def get_completed_task(self):
+        """Call model instance to get all completed tasks from db"""
+
+        completed_tasks = self.model.get_completed_tasks()
+        self.view.clear_task_list()
+        for task in completed_tasks:
+            self.view.add_task(task.name)

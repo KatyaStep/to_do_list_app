@@ -296,8 +296,8 @@ class Model:
         """Gets the list of all COMPLETED tasks from db"""
 
         tasks = []
-        query = "SELECT rowid, * FROM tasks WHERE completed = ? ORDER BY rowid ASC"
-        results = self.cursor.execute(query, (1,)).fetchall()
+        query = "SELECT rowid, * FROM tasks WHERE completed = ? AND removed = ? ORDER BY rowid ASC"
+        results = self.cursor.execute(query, (1, 0,)).fetchall()
         for result in results:
             # row_id = result[0]
             # name = str(result[1])
@@ -311,9 +311,22 @@ class Model:
                 'due_date': due_date,
                 'completed': completed,
                 'notes': notes,
-                'removed':removed,
+                'removed': removed,
             }
             tasks.append(Task(data))
             # tasks.append(Task(row_id, name, due_date, completed, notes))
 
         return tasks
+
+    def get_incomplete_tasks(self):
+        """Gets the list of  incomplete tasks from db"""
+
+        incomplete_tasks = []
+
+        query = "SELECT name FROM tasks WHERE completed = ? AND removed = ? ORDER BY rowid ASC"
+        results = self.cursor.execute(query, (0, 0,)).fetchall()
+        for name in results:
+            print(name[0])
+            incomplete_tasks.append(name[0])
+
+        return incomplete_tasks

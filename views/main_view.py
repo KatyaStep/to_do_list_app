@@ -228,6 +228,8 @@ class MainWindowView(QMainWindow):
         self.delete_btn.clicked.connect(self.click_delete_btn)
         self.add_task_qline.returnPressed.connect(self.get_task_text)
         self.complete_main_checkbox.clicked.connect(self.complete_task)
+        self.incomplete_btn.clicked.connect(self.show_incomplete_tasks)
+        self.completed_btn.clicked.connect(self.show_complete_tasks)
 
     def disable_edit_menu(self):
         """Disables the edit menu"""
@@ -305,7 +307,7 @@ class MainWindowView(QMainWindow):
 
         self.overdue_num.setText(num_tasks)
 
-    def update_completed_task_update(self, num_tasks):
+    def update_completed_task_number(self, num_tasks):
         """Updates the total amount of tasks that are completed
 
         Parameters
@@ -451,3 +453,60 @@ class MainWindowView(QMainWindow):
         self.task_list.takeItem(self.task_list.currentRow())
         self.complete_main_checkbox.setCheckState(QtCore.Qt.Unchecked)
         self.controller.update_task_overview()
+
+    def show_incomplete_tasks(self):
+        """Shows all incomplete tasks on the main page"""
+
+        self.set_default_completed_btn()
+
+        if self.incomplete_btn.isChecked():
+            self.controller.get_incomplete_task()
+            self.incomplete_btn.setStyleSheet(
+                "font: 13pt 'Chalkduster'; color: black; background-color: #dbe8f6;"
+                "border: 1px solid grey; border-width: 1px; border-radius: 10px;"
+                )
+        else:
+            self.set_default_incomplete_btn()
+            self.clear_task_list()
+            self.controller.update_task_list()
+
+
+    def show_complete_tasks(self):
+        """Shows all incomplete tasks on the main page"""
+
+        self.set_default_incomplete_btn()
+
+        if self.completed_btn.isChecked():
+            print('Complete btn was clicked')
+            self.controller.get_completed_task()
+            self.completed_btn.setStyleSheet(
+                "font: 13pt 'Chalkduster'; color: black; background-color: #dbe8f6;"
+                "border: 1px solid grey; border-width: 1px; border-radius: 10px;"
+                )
+        else:
+            self.set_default_completed_btn()
+            self.clear_task_list()
+            self.controller.update_task_list()
+
+    def clear_task_list(self):
+        """Clear the task view list"""
+
+        self.task_list.clear()
+
+    def set_default_incomplete_btn(self):
+        """Set to the default state Incomplete btn"""
+
+        self.incomplete_btn.setChecked(False)
+        self.incomplete_btn.setStyleSheet(
+            "font: 13pt 'Chalkduster'; color: black; background-color: white;"
+            "border: 1px solid grey; border-width: 1px; border-radius: 10px;"
+        )
+
+    def set_default_completed_btn(self):
+        """Set to the default state Completed btn"""
+
+        self.completed_btn.setChecked(False)
+        self.completed_btn.setStyleSheet(
+            "font: 13pt 'Chalkduster'; color: black; background-color: white;"
+            "border: 1px solid grey; border-width: 1px; border-radius: 10px;"
+        )
