@@ -18,7 +18,7 @@ class Task:
     name: str
         name of the task
     due_date: str
-    completed: str
+    completed: int (0 - False, 1-True)
     notes: str
     """
 
@@ -28,6 +28,7 @@ class Task:
         self.due_date = task['due_date']
         self.completed = task['completed']
         self.notes = task['notes']
+        self.removed = task['removed']
 
 
 class Model:
@@ -75,13 +76,14 @@ class Model:
             # due_date = str(result[2])
             # completed = str(result[3])
             # notes = str(result[4])
-            row_id, name, due_date, completed, notes = result
+            row_id, name, due_date, completed, notes, removed = result
             data = {
                 'task_id': row_id,
                 'name': name,
                 'due_date': due_date,
                 'completed': completed,
                 'notes': notes,
+                'removed': removed,
             }
             # tasks.append(Task(row_id, name, due_date, completed, notes))
             tasks.append(Task(data))
@@ -112,13 +114,14 @@ class Model:
         query = "SELECT rowid, * FROM tasks ORDER BY rowid ASC;"
         results = self.cursor.execute(query).fetchall()[-1]
 
-        row_id, name, due_date, completed, notes = results
+        row_id, name, due_date, completed, notes, removed = results
         data = {
             'task_id': row_id,
             'name': name,
             'due_date': due_date,
             'completed': completed,
             'notes': notes,
+            'removed': removed,
         }
         # row_id = results[0]
         # name = str(results[1])
@@ -167,7 +170,7 @@ class Model:
         # due_date = str(result[2])
         # completed = str(result[3])
         # notes = str(result[4])
-        row_id, name, due_date, completed, notes = result
+        row_id, name, due_date, completed, notes, removed = result
 
         data = {
             'task_id': row_id,
@@ -175,6 +178,7 @@ class Model:
             'due_date': due_date,
             'completed': completed,
             'notes': notes,
+            'removed': removed,
         }
         # return Task(row_id, name, due_date, completed, notes)
         return Task(data)
@@ -232,13 +236,15 @@ class Model:
             rowid = results[0]
             name = results[1]
             if (rowid == task_id) and (name == task_name):
-                query = "DELETE FROM tasks WHERE rowid=?"
-                self.cursor.execute(query, (task_id,))
+                # query = "DELETE FROM tasks WHERE rowid=?"
+                query = "UPDATE  tasks SET removed=? WHERE rowid=?"
+                self.cursor.execute(query, (1, task_id,))
                 self.app_db.commit()
                 return True
 
-        query = "DELETE FROM tasks WHERE name=?"
-        self.cursor.execute(query, (task_name,))
+        # query = "DELETE FROM tasks WHERE name=?"
+        query = "UPDATE  tasks SET removed=? WHERE name=?"
+        self.cursor.execute(query, (1, task_name,))
         self.app_db.commit()
 
         return True
@@ -267,7 +273,7 @@ class Model:
                 self.cursor.execute(
                     query,
                     (
-                        "True",
+                        1,
                         task_id,
                     ),
                 )
@@ -278,7 +284,7 @@ class Model:
         self.cursor.execute(
             query,
             (
-                "True",
+                1,
                 task_name,
             ),
         )
@@ -291,20 +297,21 @@ class Model:
 
         tasks = []
         query = "SELECT rowid, * FROM tasks WHERE completed = ? ORDER BY rowid ASC"
-        results = self.cursor.execute(query, ("True",)).fetchall()
+        results = self.cursor.execute(query, (1,)).fetchall()
         for result in results:
             # row_id = result[0]
             # name = str(result[1])
             # due_date = str(result[2])
             # completed = str(result[3])
             # notes = str(result[4])
-            row_id, name, due_date, completed, notes = result
+            row_id, name, due_date, completed, notes, removed = result
             data = {
                 'task_id': row_id,
                 'name': name,
                 'due_date': due_date,
                 'completed': completed,
                 'notes': notes,
+                'removed':removed,
             }
             tasks.append(Task(data))
             # tasks.append(Task(row_id, name, due_date, completed, notes))

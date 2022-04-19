@@ -47,8 +47,9 @@ class MockModel:
                 'task_id': task["row_id"],
                 'name': str(task["name"]),
                 'due_date': task["due_date"],
-                'completed': str(task["completed"]),
+                'completed': task["completed"],
                 'notes': str(task["notes"]),
+                'removed': task['removed'],
             }
             # row_id = task["row_id"]
             # name = str(task["name"])
@@ -75,8 +76,9 @@ class MockModel:
                 "row_id": last_row + 1,
                 "name": task_name,
                 "due_date": "04/30/22",
-                "completed": False,
+                "completed": 0,
                 "notes": None,
+                'removed': 0,
             }
         )
 
@@ -95,6 +97,7 @@ class MockModel:
             'due_date': self.data[-1]["due_date"],
             'completed': self.data[-1]["completed"],
             'notes': self.data[-1]["notes"],
+            'removed': self.data[-1]['removed'],
         }
         # return Task(row_id, name, due_date, completed, notes)
         return Task(temp_task_storage)
@@ -117,6 +120,7 @@ class MockModel:
                     'due_date': task["due_date"],
                     'completed': task["completed"],
                     'notes': task["notes"],
+                    'removed': task['removed'],
                 }
                 # row_id = task["row_id"]
                 # name = task["name"]
@@ -136,12 +140,13 @@ class MockModel:
         due_date - str
         notes - str
         """
-        _, task_id, new_name, due_date, notes = updated_data.values()
+        task_id, new_name, due_date, notes, removed = updated_data.values()
         for _, task in enumerate(self.data):
             if task["row_id"] == task_id:
                 task["name"] = new_name
                 task["due_date"] = due_date
                 task["notes"] = notes
+                task['removed'] = removed
                 # return True
 
     def delete_task(self, task_to_delete):
@@ -168,14 +173,14 @@ class MockModel:
 
         for _, task in enumerate(self.data):
             if task["row_id"] == task_to_complete['task_id']:
-                task["completed"] = "True"
+                task["completed"] = 1
 
     def get_completed_tasks(self):
         """Gets the list of all COMPLETED tasks from db"""
         tasks = []
 
         for idx, task in enumerate(self.data):
-            if task["completed"] == "True":
+            if task["completed"] == 1:
                 tasks.append(self.data[idx])
 
         return tasks

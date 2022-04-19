@@ -85,7 +85,7 @@ class MainWindowController(QObject):
         """Calling the view module to represent all task on the main page of the app"""
 
         for task in self.tasks:
-            if task.completed == "False":
+            if task.completed == 0 and task.removed == 0:
                 self.view.add_task(task.name)
 
     def get_task_overview(self):
@@ -93,20 +93,26 @@ class MainWindowController(QObject):
 
         overdue_tasks = []
         completed_tasks = []
+        removed_tasks = [] # we will need for the functionality 'Trash'
+        all_tasks = []
 
         curr_date = date.today()
         format_date = curr_date.strftime("%Y/%m/%d")
 
         for task in self.tasks:
-            if task.due_date < format_date:
-                overdue_tasks.append(task)
-            if task.completed == "True":
-                completed_tasks.append(task)
-        #
-        # for task in completed_tasks:
-        #     print("This is completed task: ", task.name)
+            if task.removed == 0:
+                all_tasks.append(task)
+                if task.due_date < format_date:
+                    overdue_tasks.append(task)
+                if task.completed == 1:
+                    completed_tasks.append(task)
+            else:
+                removed_tasks.append(task)
 
-        self.view.update_task_count(str(len(self.tasks)))
+        # for task in removed_tasks:
+        #     print("This is removed task: ", task.name)
+
+        self.view.update_task_count(str(len(all_tasks)))
         self.view.update_overdue_task_count(str(len(overdue_tasks)))
         self.view.update_completed_task_update(str(len(completed_tasks)))
 
@@ -189,6 +195,8 @@ class MainWindowController(QObject):
             'task_name': task_name,
         }
         if self.model.delete_task(data):
+            self.tasks = self.model.get_all_tasks()
+            self.get_task_overview()
             print("Deleted successfully")
 
     def complete_task(self, task_id, task_name):
@@ -208,5 +216,6 @@ class MainWindowController(QObject):
 
     def update_task_overview(self):
         """Call model instance to update task overview number on the main screen of the app."""
+
         completed_tasks = self.model.get_completed_tasks()
         self.view.update_completed_task_update(str(len(completed_tasks)))
