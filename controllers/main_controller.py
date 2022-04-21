@@ -132,7 +132,7 @@ class MainWindowController(QObject):
 
         self.edit_task_id = task_id
         self.set_edit_window(edit_window)
-        self.task = self.model.get_task_info(self.edit_task_id, task_name)
+        self.task = self.model.get_task_info((self.edit_task_id, task_name))
         self.edit_view.task_info(self.task)
 
         if not test_mode:

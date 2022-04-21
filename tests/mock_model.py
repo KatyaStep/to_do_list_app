@@ -76,7 +76,7 @@ class MockModel:
         return Task(*task)
 
 
-    def get_task_info(self, task_id, task_name):
+    def get_task_info(self, task_info):
         """Get a task info from db for edit window launch
 
          Parameters
@@ -84,10 +84,13 @@ class MockModel:
         task_id - int
             id of a task that equals rowid in db
         """
+        task_id, _ = task_info
 
         for _, task in enumerate(self.data):
             if task["row_id"] == task_id:
                 return Task(*(task.values()))
+
+        return True
 
     def update_task_info(self, updated_data):
         """Updates a task info in db

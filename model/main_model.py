@@ -83,7 +83,7 @@ class Model:
 
         return Task(*results)
 
-    def get_task_info(self, task_id, task_name) -> Task:
+    def get_task_info(self, task) -> Task:
         """Get a task info from db for edit window launch
 
          Parameters
@@ -91,6 +91,7 @@ class Model:
         task_id - int
             id of a task that equals rowid in db
         """
+        task_id, task_name = task
 
         query_select = "SELECT rowid, * FROM tasks WHERE rowid=?;"
         valid_result = self.cursor.execute(query_select, (task_id,)).fetchone()
