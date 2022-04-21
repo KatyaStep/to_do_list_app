@@ -42,22 +42,9 @@ class MockModel:
         """Gets the list of all tasks from db"""
 
         tasks = []
-        for task in self.data:
-            temp_task_storage = {
-                'task_id': task["row_id"],
-                'name': str(task["name"]),
-                'due_date': task["due_date"],
-                'completed': task["completed"],
-                'notes': str(task["notes"]),
-                'removed': task['removed'],
-            }
-            # row_id = task["row_id"]
-            # name = str(task["name"])
-            # due_date = task["due_date"]
-            # completed = str(task["completed"])
-            # notes = str(task["notes"])
-            tasks.append(Task(temp_task_storage))
-            # tasks.append(Task(row_id, name, due_date, completed, notes))
+        for data in self.data:
+            task = Task(*data)
+            tasks.append(task)
 
         return tasks
 
@@ -84,23 +71,10 @@ class MockModel:
 
     def get_last_added_task(self):
         """Gets last added task from db"""
+        task = self.data[-1].values()
 
-        # row_id = self.data[-1]["row_id"]
-        # name = self.data[-1]["name"]
-        # due_date = self.data[-1]["due_date"]
-        # completed = self.data[-1]["completed"]
-        # notes = self.data[-1]["notes"]
+        return Task(*task)
 
-        temp_task_storage = {
-            'task_id': self.data[-1]["row_id"],
-            'name': self.data[-1]["name"],
-            'due_date': self.data[-1]["due_date"],
-            'completed': self.data[-1]["completed"],
-            'notes': self.data[-1]["notes"],
-            'removed': self.data[-1]['removed'],
-        }
-        # return Task(row_id, name, due_date, completed, notes)
-        return Task(temp_task_storage)
 
     def get_task_info(self, task_id, task_name):
         """Get a task info from db for edit window launch
@@ -113,22 +87,7 @@ class MockModel:
 
         for _, task in enumerate(self.data):
             if task["row_id"] == task_id:
-                # print(f"THIS IS TASK NAME FOR EDIT WINDOW: {task['name']}")
-                temp_task_storage = {
-                    'task_id': task_id,
-                    'name':  task_name,
-                    'due_date': task["due_date"],
-                    'completed': task["completed"],
-                    'notes': task["notes"],
-                    'removed': task['removed'],
-                }
-                # row_id = task["row_id"]
-                # name = task["name"]
-                # due_date = task["due_date"]
-                # completed = task["completed"]
-                # notes = task["notes"]
-        return Task(temp_task_storage)
-        # return Task(row_id, name, due_date, completed, notes)
+                return Task(*(task.values()))
 
     def update_task_info(self, updated_data):
         """Updates a task info in db

@@ -42,7 +42,6 @@ class MainWindowController(QObject):
         self.edit_view = None
         self.edit_task_name = None
         self.task = None
-        # self.confirmation_view = None
 
     def set_view(self, view):
         """Initialize main_window(view module)
@@ -66,15 +65,6 @@ class MainWindowController(QObject):
 
         self.edit_view = edit_view
 
-    # def set_confirmation_dialog(self, confirm_dialog):
-    #     """Initialize confirm dialog window(view module)
-    #     Parameters
-    #     ----------
-    #     confirm_dialog: object
-    #         instance of class ConfirmationDialog(QDialog)
-    #     """
-    #     self.confirmation_view = confirm_dialog
-
     def on_start_up(self):
         """Calls methods 'update_task_list(), update_task_overview() on the start of the app."""
 
@@ -93,7 +83,7 @@ class MainWindowController(QObject):
 
         overdue_tasks = []
         completed_tasks = []
-        removed_tasks = [] # we will need for the functionality 'Trash'
+        removed_tasks = []  # we will need for the functionality 'Trash'
         all_tasks = []
 
         curr_date = date.today()
@@ -108,9 +98,6 @@ class MainWindowController(QObject):
                     completed_tasks.append(task)
             else:
                 removed_tasks.append(task)
-
-        # for task in removed_tasks:
-        #     print("This is removed task: ", task.name)
 
         self.view.update_task_count(str(len(all_tasks)))
         self.view.update_overdue_task_count(str(len(overdue_tasks)))
@@ -143,18 +130,13 @@ class MainWindowController(QObject):
         task_name:
         """
 
-        # self.edit_task_name = task_name
         self.edit_task_id = task_id
         self.set_edit_window(edit_window)
-
-        # task = self.model.get_task_info(self.edit_task_name)
         self.task = self.model.get_task_info(self.edit_task_id, task_name)
-        # self.edit_view.task_info(task.id, task.name, task.due_date, task.completed, task.notes)
         self.edit_view.task_info(self.task)
+
         if not test_mode:
             self.edit_view.exec()
-        # else:
-        #     self.edit_view.show()
 
     def save_changes(self, task_name, due_date, notes):
         """Saves changes after editing a task
@@ -176,9 +158,6 @@ class MainWindowController(QObject):
             'notes': notes,
         }
         self.model.update_task_info(data)
-        # self.model.update_task_info(
-        #     self.task.name, self.edit_task_id, task_name, due_date, notes
-        # )
         self.view.update_task_name(task_name, self.edit_task_id)
 
     def delete_task(self, task_id, task_name):
@@ -191,7 +170,7 @@ class MainWindowController(QObject):
         task_name: str
         """
         data = {
-            'task_id':task_id,
+            'task_id': task_id,
             'task_name': task_name,
         }
         if self.model.delete_task(data):
@@ -209,7 +188,7 @@ class MainWindowController(QObject):
         task_name: str
         """
         data = {
-            'task_id':task_id,
+            'task_id': task_id,
             'task_name': task_name,
         }
         self.model.complete_task(data)
