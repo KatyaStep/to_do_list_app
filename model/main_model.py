@@ -3,6 +3,7 @@
 import logging
 import sqlite3
 from collections import namedtuple
+import datetime
 
 
 def get_db_connection():
@@ -10,7 +11,7 @@ def get_db_connection():
     return sqlite3.connect("/Users/katestepanova/repos/to_do_list_app/data/data.db")
 
 
-Task = namedtuple('Task', 'task_id name due_date completed notes removed')
+Task = namedtuple('Task', 'task_id name due_date completed notes removed time_added')
 
 
 class Model:
@@ -66,11 +67,12 @@ class Model:
         """
 
         query = (
-            "INSERT INTO tasks(name, due_date, completed, notes, removed) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO tasks(name, due_date, completed, notes, removed, time_added) VALUES (?, ?, ?, ?, ?, ?)"
         )
         not_completed = 0
         not_removed = 0
-        row = (task_name, "never", not_completed, "NULL", not_removed)
+        time_added = datetime.datetime.today().strftime("%m/%d/%y %H/%M/%S")
+        row = (task_name, "never", not_completed, "NULL", not_removed, time_added)
 
         self.cursor.execute(query, row)
         self.app_db.commit()
@@ -78,8 +80,8 @@ class Model:
     def get_last_added_task(self):
         """Gets last added task from db"""
 
-        query = "SELECT rowid, * FROM tasks ORDER BY rowid ASC;"
-        results = self.cursor.execute(query).fetchall()[-1]
+        query = "SELECT rowid, * FROM tasks ORDER BY time_added DESC;"
+        results = self.cursor.execute(query).fetchone()
 
         return Task(*results)
 
@@ -223,7 +225,7 @@ class Model:
         """Gets the list of all COMPLETED tasks from db"""
 
         tasks = []
-        query = "SELECT rowid, * FROM tasks WHERE completed = ? AND removed = ? ORDER BY rowid ASC"
+        query = "SELECT rowid, * FROM tasks WHERE completed = ? AND removed = ? ORDER BY time_added ASC"
         completed = 1
         not_removed = 0
         results = self.cursor.execute(query, (completed, not_removed,)).fetchall()
@@ -238,7 +240,7 @@ class Model:
 
         incomplete_tasks = []
 
-        query = "SELECT name FROM tasks WHERE completed = ? AND removed = ? ORDER BY rowid ASC"
+        query = "SELECT name FROM tasks WHERE completed = ? AND removed = ? ORDER BY time_added ASC"
         not_completed = 0
         not_removed = 0
 

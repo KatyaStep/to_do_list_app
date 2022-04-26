@@ -52,52 +52,26 @@ class MainWindowView(QMainWindow):
         self.disable_edit_menu()
 
         self.task_list.itemClicked.connect(self.item_click)
-        self.edit_btn.clicked.connect(self.click_edit_btn)
-        self.delete_btn.clicked.connect(self.click_delete_btn)
+        self.EditBtn.clicked.connect(self.click_edit_btn)
+        self.DeleteBtn.clicked.connect(self.click_delete_btn)
         self.add_task_qline.returnPressed.connect(self.get_task_text)
-        self.complete_main_checkbox.clicked.connect(self.complete_task)
-        self.incomplete_btn.clicked.connect(self.show_incomplete_tasks)
-        self.completed_btn.clicked.connect(self.show_complete_tasks)
+        self.CompleteCheckbox.clicked.connect(self.complete_task)
+        self.IncompleteBtn.clicked.connect(self.show_incomplete_tasks)
+        self.CompletedBtn.clicked.connect(self.show_complete_tasks)
 
     def disable_edit_menu(self):
         """Disables the edit menu"""
 
-        self.edit_btn.setEnabled(False)
-        self.delete_btn.setEnabled(False)
-
-        self.edit_btn.setStyleSheet(
-            "border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
-            "rgb(171, 171, 171); font: 12pt 'Chalkduster';"
-        )
-        self.delete_btn.setStyleSheet(
-            "border-radius: 6px; border : 2px solid grey; background-color: #dbe8f6; color: "
-            "rgb(171, 171, 171); font: 12pt 'Chalkduster';"
-        )
-
-        self.complete_main_checkbox.setEnabled(False)
-        self.complete_main_checkbox.setStyleSheet(
-            "color: rgb(171, 171, 171); font: 12pt 'Chalkduster';"
-        )
+        self.EditBtn.setEnabled(False)
+        self.DeleteBtn.setEnabled(False)
+        self.CompleteCheckbox.setEnabled(False)
 
     def enable_edit_menu(self):
         """Enables the edit menu"""
 
-        self.edit_btn.setEnabled(True)
-        self.delete_btn.setEnabled(True)
-
-        self.edit_btn.setStyleSheet(
-            "color: black; border-radius: 6px; border : 2px solid grey; background-color: "
-            "#dbe8f6; font: 12pt 'Chalkduster';"
-        )
-        self.delete_btn.setStyleSheet(
-            "color: black; border-radius: 6px; border : 2px solid grey; background-color: "
-            "#dbe8f6; font: 12pt 'Chalkduster';"
-        )
-
-        self.complete_main_checkbox.setEnabled(True)
-        self.complete_main_checkbox.setStyleSheet(
-            "color: black; font: 12pt 'Chalkduster';"
-        )
+        self.EditBtn.setEnabled(True)
+        self.DeleteBtn.setEnabled(True)
+        self.CompleteCheckbox.setEnabled(True)
 
     def add_task(self, task_name):
         """Adds a new task to the task_list widget
@@ -166,7 +140,7 @@ class MainWindowView(QMainWindow):
         for i in range(self.task_list.count()):
             if self.task_list.item(i) != item:
                 self.task_list.item(i).setCheckState(QtCore.Qt.Unchecked)
-                self.complete_main_checkbox.setCheckState(QtCore.Qt.Unchecked)
+                self.CompleteCheckbox.setCheckState(QtCore.Qt.Unchecked)
 
         if item.checkState():
             item.setCheckState(QtCore.Qt.Unchecked)
@@ -247,7 +221,7 @@ class MainWindowView(QMainWindow):
 
     def complete_task(self):
         """Complete the task"""
-        if self.complete_main_checkbox.checkState():
+        if self.CompleteCheckbox.checkState():
             task_id = self.task_list.currentRow() + 1
             task_name = self.selected_item_name
             self.controller.complete_task(task_id, task_name)
@@ -264,7 +238,7 @@ class MainWindowView(QMainWindow):
     def remove_task_from_list(self):
         """Remove task from the list after completion"""
         self.task_list.takeItem(self.task_list.currentRow())
-        self.complete_main_checkbox.setCheckState(QtCore.Qt.Unchecked)
+        self.CompleteCheckbox.setCheckState(QtCore.Qt.Unchecked)
         self.controller.update_task_overview()
 
     def show_incomplete_tasks(self):
@@ -272,12 +246,9 @@ class MainWindowView(QMainWindow):
 
         self.set_default_completed_btn()
 
-        if self.incomplete_btn.isChecked():
+        if self.IncompleteBtn.isChecked():
             self.controller.get_incomplete_task()
-            self.incomplete_btn.setStyleSheet(
-                "font: 13pt 'Chalkduster'; color: black; background-color: #dbe8f6;"
-                "border: 1px solid grey; border-width: 1px; border-radius: 10px;"
-                )
+            self.IncompleteBtn.setStyleSheet("background-color: #dbe8f6;")
         else:
             self.set_default_incomplete_btn()
             self.clear_task_list()
@@ -288,13 +259,10 @@ class MainWindowView(QMainWindow):
 
         self.set_default_incomplete_btn()
 
-        if self.completed_btn.isChecked():
+        if self.CompletedBtn.isChecked():
             logging.debug('Complete btn was clicked')
             self.controller.get_completed_task()
-            self.completed_btn.setStyleSheet(
-                "font: 13pt 'Chalkduster'; color: black; background-color: #dbe8f6;"
-                "border: 1px solid grey; border-width: 1px; border-radius: 10px;"
-                )
+            self.CompletedBtn.setStyleSheet("background-color: #dbe8f6;")
         else:
             self.set_default_completed_btn()
             self.clear_task_list()
@@ -308,17 +276,15 @@ class MainWindowView(QMainWindow):
     def set_default_incomplete_btn(self):
         """Set to the default state Incomplete btn"""
 
-        self.incomplete_btn.setChecked(False)
-        self.incomplete_btn.setStyleSheet(
-            "font: 13pt 'Chalkduster'; color: black; background-color: white;"
-            "border: 1px solid grey; border-width: 1px; border-radius: 10px;"
-        )
+        self.IncompleteBtn.setChecked(False)
+        # self.CompletedBtn.setChecked(True)
+        self.IncompleteBtn.setStyleSheet("background-color: white;")
+        # self.CompletedBtn.setStyleSheet("background-color: #dbe8f6;")
 
     def set_default_completed_btn(self):
         """Set to the default state Completed btn"""
 
-        self.completed_btn.setChecked(False)
-        self.completed_btn.setStyleSheet(
-            "font: 13pt 'Chalkduster'; color: black; background-color: white;"
-            "border: 1px solid grey; border-width: 1px; border-radius: 10px;"
-        )
+        self.CompletedBtn.setChecked(False)
+        # self.IncompleteBtn.setChecked(True)
+        self.CompletedBtn.setStyleSheet("background-color: white;")
+        # self.IncompleteBtn.setStyleSheet("background-color: #dbe8f6;")

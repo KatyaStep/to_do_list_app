@@ -24,6 +24,7 @@
   </property>
   <property name="font">
    <font>
+    <pointsize>12</pointsize>
     <kerning>true</kerning>
    </font>
   </property>
@@ -177,6 +178,7 @@ border-radius: 10px;</string>
        <pointsize>12</pointsize>
        <italic>false</italic>
        <bold>false</bold>
+       <stylestrategy>PreferDefault</stylestrategy>
        <kerning>true</kerning>
       </font>
      </property>
@@ -199,7 +201,10 @@ font: 12pt &quot;Chalkduster&quot;;
       <number>-1</number>
      </property>
     </widget>
-    <widget class="QPushButton" name="incomplete_btn">
+    <widget class="QPushButton" name="IncompleteBtn">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>320</x>
@@ -208,13 +213,14 @@ font: 12pt &quot;Chalkduster&quot;;
        <height>32</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <kerning>true</kerning>
+      </font>
+     </property>
      <property name="styleSheet">
-      <string notr="true">font: 13pt &quot;Chalkduster&quot;;
-color: black;
-background-color: #dbe8f6;
-border: 1px solid grey;
-border-width: 1px;
-border-radius: 10px;</string>
+      <string notr="true">background-color: #dbe8f6;</string>
      </property>
      <property name="text">
       <string>Incomplete</string>
@@ -231,8 +237,11 @@ border-radius: 10px;</string>
      <property name="default">
       <bool>false</bool>
      </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
     </widget>
-    <widget class="QPushButton" name="completed_btn">
+    <widget class="QPushButton" name="CompletedBtn">
      <property name="geometry">
       <rect>
        <x>460</x>
@@ -241,13 +250,10 @@ border-radius: 10px;</string>
        <height>32</height>
       </rect>
      </property>
-     <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
-color: black;
-background-color: white;
-border: 1px solid grey;
-border-width: 1px;
-border-radius: 10px;</string>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Completed</string>
@@ -258,11 +264,17 @@ border-radius: 10px;</string>
      <property name="checked">
       <bool>false</bool>
      </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
      <property name="default">
       <bool>false</bool>
      </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
     </widget>
-    <widget class="QPushButton" name="edit_btn">
+    <widget class="QPushButton" name="EditBtn">
      <property name="geometry">
       <rect>
        <x>120</x>
@@ -275,17 +287,16 @@ border-radius: 10px;</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
-border-radius: 6px;
-border : 2px solid grey;
-background-color: #dbe8f6;
-color: rgb(171, 171, 171);</string>
+      <string notr="true">background-color: #dbe8f6;</string>
      </property>
      <property name="text">
       <string>Edit</string>
      </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
     </widget>
-    <widget class="QCheckBox" name="complete_main_checkbox">
+    <widget class="QCheckBox" name="CompleteCheckbox">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -295,14 +306,13 @@ color: rgb(171, 171, 171);</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
-color: rgb(171, 171, 171);</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Complete</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="delete_btn">
+    <widget class="QPushButton" name="DeleteBtn">
      <property name="geometry">
       <rect>
        <x>210</x>
@@ -315,14 +325,13 @@ color: rgb(171, 171, 171);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;Chalkduster&quot;;
-border-radius: 6px;
-border : 2px solid grey;
-background-color: #dbe8f6;
-color: rgb(171, 171, 171);</string>
+      <string notr="true">background-color: #dbe8f6;</string>
      </property>
      <property name="text">
       <string>Delete</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>

@@ -60,7 +60,7 @@ def test_delete_task(qtbot, name):
     center = rect.center()
 
     qtbot.mouseClick(window.task_list.viewport(), QtCore.Qt.LeftButton, pos=center)
-    qtbot.mouseClick(window.delete_btn, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(window.DeleteBtn, QtCore.Qt.LeftButton)
 
     assert window.task_list.count() == 0
 
@@ -90,7 +90,7 @@ def test_edit_task(qtbot, name):
     center = rect.center()
 
     qtbot.mouseClick(window.task_list.viewport(), QtCore.Qt.LeftButton, pos=center)
-    qtbot.mouseClick(window.edit_btn, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(window.EditBtn, QtCore.Qt.LeftButton)
     qtbot.addWidget(edit_window)
 
     qtbot.keyClicks(edit_window.edit_task_name_lineEdit, "Kate_test_task_4")
@@ -112,7 +112,7 @@ def test_edit_task(qtbot, name):
 
     # Open edited task one more time and check that note was edited
     qtbot.mouseClick(window.task_list.viewport(), QtCore.Qt.LeftButton, pos=center)
-    qtbot.mouseClick(window.edit_btn, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(window.EditBtn, QtCore.Qt.LeftButton)
     assert edit_window.notes_lineEdit.text() == "A note for Kate_test_task_4"
 
 
@@ -140,7 +140,7 @@ def test_complete_task(qtbot, name):
     center = rect.center()
 
     qtbot.mouseClick(window.task_list.viewport(), QtCore.Qt.LeftButton, pos=center)
-    qtbot.mouseClick(window.complete_main_checkbox, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(window.CompleteCheckbox, QtCore.Qt.LeftButton)
 
     assert window.task_list.count() == 0
     assert int(window.completed_num.text()) == 1
@@ -164,11 +164,11 @@ def test_ui_main_window(qtbot, name):
     qtbot.addWidget(window)
 
     assert window.windowTitle() == "To Do App"
-    assert window.edit_btn.text() == "Edit"
-    assert window.delete_btn.text() == "Delete"
-    assert window.complete_main_checkbox.text() == "Complete"
-    assert window.incomplete_btn.text() == "Incomplete"
-    assert window.completed_btn.text() == "Completed"
+    assert window.EditBtn.text() == "Edit"
+    assert window.DeleteBtn.text() == "Delete"
+    assert window.CompleteCheckbox.text() == "Complete"
+    assert window.IncompleteBtn.text() == "Incomplete"
+    assert window.CompletedBtn.text() == "Completed"
 
     assert window.menu_header.text() == "Inbox"
     assert window.left_panel_menu.item(0).text() == "All Tasks"
@@ -208,7 +208,7 @@ def test_ui_edit_window(qtbot, name):
     center = rect.center()
 
     qtbot.mouseClick(window.task_list.viewport(), QtCore.Qt.LeftButton, pos=center)
-    qtbot.mouseClick(window.edit_btn, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(window.EditBtn, QtCore.Qt.LeftButton)
 
     assert edit_window.windowTitle() == "Edit"
     assert edit_window.summary_lbl.text() == "Summary"

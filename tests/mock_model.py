@@ -1,7 +1,9 @@
 """This module mocks the functionality related to the db queries and task data."""
 
-
+import logging
+import datetime
 from model.main_model import Task
+
 
 
 class MockModel:
@@ -22,21 +24,17 @@ class MockModel:
 
     def __init__(self, data):
         self.data = data
-        # self.app_db = get_db_connection()
-        # self.cursor = self.app_db.cursor()
-
-        # self.get_all_tasks_from_db()
 
     def clean(self):
         """Close the db connection"""
-
+        logging.debug('The application was closed')
         # self.app_db.close()
 
     def __del__(self):
         """Calls self.clean method if db connection was established"""
 
-        # if self.app_db:
-        #     self.clean()
+        if self.data:
+            self.clean()
 
     def get_all_tasks(self):
         """Gets the list of all tasks from db"""
@@ -66,6 +64,7 @@ class MockModel:
                 "completed": 0,
                 "notes": None,
                 'removed': 0,
+                'time_added': datetime.datetime.today().strftime("%m/%d/%y %H/%M/%S")
             }
         )
 

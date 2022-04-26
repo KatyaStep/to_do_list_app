@@ -45,11 +45,17 @@ class App(QApplication):
 
     def close_event(self):
         """Call the function clean from model.py"""
-        print("hello exit")
         self.model.clean()
 
 
 if __name__ == "__main__":
     app = App(sys.argv)
     app.setWindowIcon(QtGui.QIcon("app_icon.png"))
+
+    SSH_FILE = "/Users/katestepanova/repos/to_do_list_app/style.qss"
+    with open(SSH_FILE, "r", encoding='utf-8') as fh:
+        _style = fh.read()
+        print("Style is loaded")
+        app.setStyleSheet(_style)
+
     sys.exit(app.exec())

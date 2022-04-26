@@ -1,0 +1,50 @@
+QPushButton#EditBtn {
+    border-radius: 6px;
+    border : 2px solid grey;
+    color: rgb(171, 171, 171);
+    font: 12pt "Chalkduster";
+}
+
+QPushButton#EditBtn:enabled {
+    color: black;
+}
+
+QPushButton#DeleteBtn {
+    border-radius: 6px;
+    border : 2px solid grey;
+    color: rgb(171, 171, 171);
+    font: 12pt "Chalkduster";
+}
+
+
+QPushButton#DeleteBtn:enabled {
+    background-color: yellow;
+    color: black;
+}
+
+QCheckBox#CompleteCheckbox{
+    font: 12pt "Chalkduster";
+    color: rgb(171, 171, 171);
+}
+
+QCheckBox#CompleteCheckbox:enabled{
+    color: black;
+}
+
+QPushButton#IncompleteBtn{
+    border: 1px solid black;
+    border-width: 1px;
+    border-radius: 10px;
+    background-color: #4A4949;
+    font: 12pt "Chalkduster";
+    color: black;
+}
+
+QPushButton#CompletedBtn{
+    border: 1px solid black;
+    border-width: 1px;
+    border-radius: 10px;
+    background-color: #4A4949;
+    font: 12pt "Chalkduster";
+    color: black;
+}
