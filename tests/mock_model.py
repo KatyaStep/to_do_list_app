@@ -25,7 +25,8 @@ class MockModel:
     def __init__(self, data):
         self.data = data
 
-    def clean(self):
+    @staticmethod
+    def clean():
         """Close the db connection"""
         logging.debug('The application was closed')
         # self.app_db.close()
