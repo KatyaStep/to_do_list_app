@@ -1,7 +1,7 @@
 """This module initializes the app"""
 
 import sys
-
+import logging
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication
 
@@ -49,6 +49,7 @@ class App(QApplication):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='todolist.log', encoding='utf-8', level=logging.DEBUG)
     app = App(sys.argv)
     app.setWindowIcon(QtGui.QIcon("app_icon.png"))
 

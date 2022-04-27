@@ -270,7 +270,7 @@ padding-left: 5px;</string>
     <enum>QCalendarWidget::SingleLetterDayNames</enum>
    </property>
   </widget>
-  <widget class="QComboBox" name="tag_box">
+  <widget class="QComboBox" name="tagBox">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -327,16 +327,6 @@ QComboBox#tag_box ::drop-down{
    <property name="frame">
     <bool>false</bool>
    </property>
-   <item>
-    <property name="text">
-     <string>tag1</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>tag2</string>
-    </property>
-   </item>
   </widget>
  </widget>
  <resources/>

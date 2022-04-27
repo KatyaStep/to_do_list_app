@@ -5,7 +5,6 @@ import datetime
 from model.main_model import Task
 
 
-
 class MockModel:
     """
     A class that used for test environment to mock getting/sending data to db.

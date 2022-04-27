@@ -213,3 +213,17 @@ class MainWindowController(QObject):
         self.view.clear_task_list()
         for task in completed_tasks:
             self.view.add_task(task.name)
+
+    def get_tags(self):
+        """Call model instance to get all tags from db"""
+        return self.model.get_all_tags()
+
+    def change_tag(self, tag_idx):
+        """Call model instance to update a tag for the task in db
+
+        Parameters
+        ----------
+        tag_idx: int
+        """
+
+        self.model.update_tag(self.task.name, tag_idx)

@@ -11,7 +11,7 @@ def get_db_connection():
     return sqlite3.connect("/Users/katestepanova/repos/to_do_list_app/data/data.db")
 
 
-Task = namedtuple('Task', 'task_id name due_date completed notes removed time_added')
+Task = namedtuple('Task', 'task_id name due_date completed notes removed time_added tag')
 
 
 class Model:
@@ -67,12 +67,13 @@ class Model:
         """
 
         query = (
-            "INSERT INTO tasks(name, due_date, completed, notes, removed, time_added) VALUES (?, ?, ?, ?, ?, ?)"
+            "INSERT INTO tasks(name, due_date, completed, notes, removed, time_added) VALUES (?, ?, ?, ?, ?, ?, ?)"
         )
         not_completed = 0
         not_removed = 0
         time_added = datetime.datetime.today().strftime("%m/%d/%y %H/%M/%S")
-        row = (task_name, "never", not_completed, "NULL", not_removed, time_added)
+        tag = 1
+        row = (task_name, "never", not_completed, "NULL", not_removed, time_added, tag)
 
         self.cursor.execute(query, row)
         self.app_db.commit()
@@ -249,3 +250,27 @@ class Model:
             incomplete_tasks.append(name[0])
 
         return incomplete_tasks
+
+    def get_all_tags(self):
+        """Gets the list of tags from db"""
+
+        tags = []
+        query = "SELECT tag_name FROM tags"
+        results = self.cursor.execute(query).fetchall()
+
+        for tag in results:
+            tags.append(tag[0])
+
+        return tags
+
+    def update_tag(self, task, tag_id):
+        """Update the tag for the current task
+         Parameters
+        ----------
+        task - str, name of the task
+        tag_id - int
+        """
+
+        query = "UPDATE tasks SET tag = ? WHERE name=?"
+        self.cursor.execute(query, (tag_id, task,))
+        self.app_db.commit()

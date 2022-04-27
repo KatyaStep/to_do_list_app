@@ -40,6 +40,7 @@ class EditWindow(QDialog):
         self.due_date_box.activated.connect(self.due_date_select)
         self.calendarWidget.selectionChanged.connect(self.pick_calendar_date)
         self.save_changes_btn.clicked.connect(self.save_changes)
+        self.tagBox.activated.connect(self.tags_selection)
         # self.due_date_list_options()
 
     def due_date_list_options(self, due_date):
@@ -83,6 +84,29 @@ class EditWindow(QDialog):
         self.due_date_box.setItemText(0, str(date_selected))
         self.due_date_box.setCurrentIndex(0)
 
+    def tags_list(self, current_tag):
+        """Show a list of tags in a dropdown list.
+
+        Parameters
+        ----------
+        current_tag: int
+            The current tag index for the selected task
+        """
+
+        tags = self.controller.get_tags()
+
+        for idx, tag in enumerate(tags):
+            self.tagBox.insertItem(idx, tag)
+
+        self.tagBox.setCurrentIndex(current_tag)
+
+    def tags_selection(self):
+        """Choose a new tag for the current task"""
+
+        tag_idx = self.tagBox.currentIndex() + 1
+
+        self.controller.change_tag(tag_idx)
+
     def task_info(self, task):
         """
         Show a task info: name, due_date, notes, tags in Edit mode
@@ -96,6 +120,7 @@ class EditWindow(QDialog):
         self.edit_task_name_lineEdit.setText(task.name)
         self.due_date_list_options(task.due_date)
         self.notes_lineEdit.setText(task.notes)
+        self.tags_list(task.tag - 1)
 
     def save_changes(self):
         """Save changes after editing a task. New variables: task_name, due_date, notes"""

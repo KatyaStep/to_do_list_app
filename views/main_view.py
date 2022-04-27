@@ -277,14 +277,10 @@ class MainWindowView(QMainWindow):
         """Set to the default state Incomplete btn"""
 
         self.IncompleteBtn.setChecked(False)
-        # self.CompletedBtn.setChecked(True)
         self.IncompleteBtn.setStyleSheet("background-color: white;")
-        # self.CompletedBtn.setStyleSheet("background-color: #dbe8f6;")
 
     def set_default_completed_btn(self):
         """Set to the default state Completed btn"""
 
         self.CompletedBtn.setChecked(False)
-        # self.IncompleteBtn.setChecked(True)
         self.CompletedBtn.setStyleSheet("background-color: white;")
-        # self.IncompleteBtn.setStyleSheet("background-color: #dbe8f6;")
